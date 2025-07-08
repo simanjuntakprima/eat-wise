@@ -78,3 +78,4 @@
     "seed": "node prisma/seeder.js"
   }
 }
+
