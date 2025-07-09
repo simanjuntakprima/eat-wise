@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import { registerAction } from '../action';
+import { SocialLogin } from '../_components/social-login';
 
 export default function Page() {
   const [state, action, pending] = useActionState(registerAction, null);
@@ -44,11 +45,8 @@ export default function Page() {
               Join us →
             </Button>
             <div className="text-center text-sm text-gray-500">or</div>
-            <Button type="button" className="flex w-full items-center justify-center gap-2 rounded-lg border p-3">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5" />
-              Sign up with Google
-            </Button>
           </form>
+          <SocialLogin />
         </div>
       </div>
     </div>
