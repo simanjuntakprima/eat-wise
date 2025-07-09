@@ -1,29 +1,32 @@
 'use server';
 
-export async function createMealPlan(_, formData) {
-  const budget = Number(formData.get('budget'));
+export async function createMealPlan(formData) {
+  const budget = formData.get('budget');
   const days = formData.get('days');
-  const makan = formData.get('makan');
-  const alergi = formData.get('alergi');
-  const type = formData.get('type');
+  const frequency = formData.get('frequency');
+  const allergies = formData.get('allergies') || '';
+  const type = formData.get('type') || '';
 
-  const errors = {};
+  try {
+    const mealPlan = await prisma.mealPlan.create({
+      data: {
+        budget: parseInt(budget),
+        days: parseInt(days),
+        frequency: parseInt(frequency),
+        allergies,
+        type,
+      },
+    });
 
-  if (isNaN(budget) || budget < 10000) {
-    errors.budget = 'Budget minimal Rp 10.000';
+    return {
+      success: true,
+      message: 'Meal plan berhasil disimpan!',
+      mealPlan,
+    };
+  } catch {
+    return {
+      success: false,
+      error: 'Terjadi kesalahan saat menyimpan ke database.',
+    };
   }
-
-  if (!hari) errors.days = 'Wajib pilih hari';
-  if (!makan) errors.makan = 'Wajib pilih jumlah makan';
-  if (!type) errors.foodType = 'Wajib pilih tipe makanan';
-
-  if (Object.keys(errors).length > 0) {
-    return { success: false, errors };
-  }
-
-  // Lanjut simpan / proses data
-  return {
-    success: true,
-    data: { budget, days, makan, alergi, type },
-  };
 }
