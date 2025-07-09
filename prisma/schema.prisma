@@ -12,65 +12,57 @@ model User {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
-  password  String
-  avatarUrl String?
+  password  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions     Session[]
-  events       Event[]
-  participants Participant[]
+  mealPlans    MealPlan[]
+  Sessions    Session[]
+}
+
+model MealPlan {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  days     Int
+  allergies Json?
+  cuisineCategories Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  meals     Meal[]
+    @@unique([id, userId])
+}
+
+model Meal {
+  id        String   @id @default(cuid())
+  mealPlanId    String
+  mealplan      MealPlan    @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  recipeId String
+  name     String
+  type     String
+  imageUrl String?
+  calories     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+   @@unique([id, mealPlanId])
+}
+
+model Recipe {
+  id        String   @id @default(cuid())
+  name    String
+  nutitionFacts Json?
+  ingredients Json?
+  instructions Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Session {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model Event {
-  id            String   @id @default(cuid())
-  name          String
-  slug          String   @unique
-  description   String
-  date          DateTime
-  location      String
-  imageCoverUrl String?
-  logoUrl       String?
-
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  participants Participant[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Category {
-  id       String  @id @default(cuid())
-  name     String  @unique
-  slug     String  @unique
-  imageUrl String?
-  events   Event[]
-}
-
-model Participant {
-  id      String @id @default(cuid())
-  eventId String
-  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  userId  String
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([eventId, userId])
 }
