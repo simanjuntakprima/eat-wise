@@ -41,7 +41,7 @@ export async function loginAction(_, formData) {
   redirect('/');
 }
 
-export async function registerAction(_, formData) {
+export async function registerAction(formData) {
   const name = formData.get('name');
   const email = formData.get('email');
   const password = formData.get('password');
