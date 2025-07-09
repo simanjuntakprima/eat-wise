@@ -1,39 +1,69 @@
 
+import { Avatar } from '@radix-ui/react-avatar';
 import './globals.css';
 import { Button } from '@/components/ui/button';
+import { LogOut, LogOutIcon } from 'lucide-react';
 
-export const metadata = {
-  Title: 'EatWise',
-  Description: 'diisi apa ini',
-};
+// const user = {
+//   name: session?.user?.name ?? 'Guest',
+//   avatarUrl: session?.user?.image ?? null, 
+// };
+
+// const getInitials = (name) =>
+//   name
+//     ?.split(' ')
+//     .map((n) => n[0])
+//     .join('')
+//     .toUpperCase();
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="flex min-h-screen">
-        <aside className="flex w-64 flex-col gap-4 bg-[#4E2B2B] p-4 text-white">
-          <div className="flex flex-col items-center">
-            <div className="h-24 w-24 rounded-full bg-gray-300" />
-            <p className="mt-2 text-sm">Nagata Kaizure</p>
+      <body className="flex h-screen">
+        <aside className="flex w-64 flex-col items-center gap-4 bg-[#4E3636] p-4 text-white">
+          <div className="cardContent flex flex-col items-center">
+            {/* <Avatar.Root className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gray-300">
+              <Avatar.Image className="h-full w-full object-cover" src={user.avatarUrl} alt={user.name} />
+              <Avatar.Fallback delayMs={500} className="text-xl font-semibold text-white">
+                {getInitials(user.name)}
+              </Avatar.Fallback>
+            </Avatar.Root> */}
+            {/* <p className="mt-2 text-center text-sm text-white">{user.name}</p> */}
           </div>
 
-          <Button className="rounded bg-[#EADDC5] px-4 py-2 text-black">Create Meal Plan!</Button>
-
-          <div className="flex flex-col gap-2">
-            <Button className="rounded bg-[#EADDC5] px-4 py-2 text-black">Menu</Button>
-            <Button className="rounded bg-[#EADDC5] px-4 py-2 text-black">History</Button>
-            <Button className="rounded bg-[#EADDC5] px-4 py-2 text-black">User Account</Button>
+          <div className="cardContent flex flex-col gap-4">
+            <Button href="" className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]">
+              Create Meal Plan!
+            </Button>
           </div>
 
-          <div className="mt-auto">
-            <Button className="flex w-full items-center justify-between rounded bg-[#EADDC5] px-4 py-2 text-black">
+          <div className="cardContent flex flex-col gap-4">
+            <Button href="" className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]">
+              Menu
+            </Button>
+            <Button href="" className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]">
+              History
+            </Button>
+            <Button href="" className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]">
+              User Account
+            </Button>
+          </div>
+
+          <div className="cardContent mt-auto">
+            <Button href="" className="flex w-full items-center justify-between rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]">
               Logout
-              <span>↪️</span>
+              <LogOut className="w-5 h-5" />
             </Button>
           </div>
         </aside>
 
-        <main className="flex-1 bg-white p-8">{children}</main>
+        <div className="relative flex-1 bg-white p-8">
+          <div className="absolute top-4 right-6">
+            <h1 className="text-2xl font-bold text-[#321E1E]">EatWise.</h1>
+          </div>
+
+          <main className="flex-1 bg-white p-8">{children}</main>
+        </div>
       </body>
     </html>
   );

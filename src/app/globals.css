@@ -135,4 +135,8 @@
   p {
     @apply text-muted-foreground text-sm;
   }
+
+  .cardContent {
+    @apply bg-[#ECDFCC]/10 backdrop-blur-md rounded-xl p-5 mb-3 w-full max-w-[220px] mx-auto
+  }
 }
