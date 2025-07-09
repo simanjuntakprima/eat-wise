@@ -26,6 +26,7 @@ model MealPlan {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String
   days     Int
+  budget   Decimal @db.Decimal(10, 2)
   allergies Json?
   cuisineCategories Json?
   createdAt DateTime @default(now())
