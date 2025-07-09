@@ -6,26 +6,6 @@ import { getUserByEmail } from '@/services/user';
 import { google } from '@/utils/arctic';
 import prisma from '@/utils/prisma';
 
-// export async function GET(request) {
-//   console.log('Google callback route called');
-//   const cookieStore = await cookies();
-//   const url = new URL(request.url); // /callback/google/?code=.....
-//   const code = url.searchParams.get('code');
-//   const codeVerifier = cookieStore.get('codeVerfier')?.value;
-//   const tokens = await google.validateAuthorizationCode(code, codeVerifier);
-//   const accessToken = tokens.accessToken();
-
-//   const res = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
-//     headers: {
-//       Authorization: `Bearer ${accessToken}`,
-//     },
-//   });
-
-//   const userInfo = await res.json();
-
-//   return Response.json({ message: 'OK', userInfo });
-// }
-
 export async function GET(request) {
   const cookieStore = await cookies();
   const url = new URL(request.url);
