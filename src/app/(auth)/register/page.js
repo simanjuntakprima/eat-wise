@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 import { registerAction } from '../action';
+import { SocialLogin } from '../_components/social-login';
 
 export default function Page() {
   const [state, action, pending] = useActionState(registerAction, null);
@@ -32,23 +33,17 @@ export default function Page() {
       <div className="flex w-full items-center justify-center p-8 md:w-1/2">
         <div className="w-full max-w-md space-y-4">
           <h2 className="text-center text-3xl font-bold">Sign Up</h2>
-          <form className="space-y-4">
-            <Input type="text" placeholder="First name" className="w-full rounded-lg border p-3" />
-            <Input type="email" placeholder="Email address" className="w-full rounded-lg border p-3" />
-            <Input type="password" placeholder="Password" className="w-full rounded-lg border p-3" />
-            <div className="flex items-start">
-              <Input type="checkbox" className="mr-2 h-4 w-4" />
-              <span className="text-sm">Accept Terms & Conditions</span>
-            </div>
+           <AlertState success={state?.success} error={state?.error} />
+          <form action={registerAction} className="space-y-4">
+            <Input name="name" type="text" placeholder="Full name" className="w-full rounded-lg border p-3" />
+            <Input name="email" type="email" placeholder="Email address" className="w-full rounded-lg border p-3" />
+            <Input name="password" type="password" placeholder="Password" className="w-full rounded-lg border p-3" />
             <Button type="submit" className="w-full rounded-lg bg-black p-3 text-white">
               Join us →
             </Button>
             <div className="text-center text-sm text-gray-500">or</div>
-            <Button type="button" className="flex w-full items-center justify-center gap-2 rounded-lg border p-3">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5" />
-              Sign up with Google
-            </Button>
           </form>
+          <SocialLogin />
         </div>
       </div>
     </div>

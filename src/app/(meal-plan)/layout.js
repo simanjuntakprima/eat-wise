@@ -1,6 +1,6 @@
 
 import { Avatar } from '@radix-ui/react-avatar';
-import './globals.css';
+import '../globals.css';
 import { Button } from '@/components/ui/button';
 import { LogOut, LogOutIcon } from 'lucide-react';
 
