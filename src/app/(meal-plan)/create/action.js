@@ -1,6 +1,7 @@
 'use server';
 
 import { openai } from '@/utils/openai';
+import { fr } from '@faker-js/faker/.';
 
 export async function createMealPlan(formData) {
   const budget = formData.get('budget');
@@ -71,6 +72,8 @@ Include weekly prep tips, nutrition facts if relevant, smart grocery lists at th
     //   },
     // });
     const input = `Create a meal plan with the following details: budget: Rp ${budget}, duration: ${days} days, frequency: ${mealTimes} meals per day, allergies: ${allergies}, type of cuisine is: ${type}.`;
+
+
     const result = await openai.responses.create({
       model: 'gpt-4o-mini',
       instructions,
