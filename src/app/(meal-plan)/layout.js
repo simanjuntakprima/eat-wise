@@ -1,8 +1,10 @@
 
-import { Avatar } from '@radix-ui/react-avatar';
 import '../globals.css';
-import { Button } from '@/components/ui/button';
+
+import { Avatar } from '@radix-ui/react-avatar';
 import { LogOut, LogOutIcon } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 
 // const user = {
 //   name: session?.user?.name ?? 'Guest',
