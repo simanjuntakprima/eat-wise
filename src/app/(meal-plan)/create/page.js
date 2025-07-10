@@ -11,10 +11,35 @@ import { createMealPlan } from './action';
 
 export default function CreateMeal() {
   const [type, setType] = useState('');
+  const [aiResult, setAiResult] = useState('');
+  const [load, setLoad] = useState(false);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setLoad(true);
+    setAiResult('');
+
+    const formData = new FormData(event.target);
+
+    try {
+      const res = await createMealPlan(formData);
+
+      if (res?.success) {
+        setAiResult(res.aiMealPlan);
+      } else {
+        setAiResult('Unsuccessful to create meal plan. Try again!')
+      }
+    } catch (error) {
+      console.error(error);
+      setAiResult('Erroe while sending to server');
+    } finally {
+      setLoad(false);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 px-4 py-10">
-      <form action={createMealPlan} className="mx-auto grid max-w-3xl gap-4">
+      <form onSubmit={handleSubmit} className="mx-auto grid max-w-3xl gap-4">
         {/* Meal Budget */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-800" htmlFor="budget">
@@ -111,6 +136,14 @@ export default function CreateMeal() {
           </Button>
         </div>
       </form>
+
+      {load && <p className="mt-4 text-center text-gray-700">Loading . . .</p>}
+      {aiResult && (
+        <div className="mx-auto mt-6 max-w-3xl rounded bg-white p-4 text-sm whitespace-pre-wrap shadow">
+          <h2 className="mb-2 text-lg font-semibold">Meal Plan Result:</h2>
+          {aiResult}
+        </div>
+      )}
     </div>
   );
 }
