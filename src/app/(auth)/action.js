@@ -1,12 +1,11 @@
 'use server';
 
+import * as arctic from 'arctic';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { createSession, verifyPassword } from '@/services/auth';
 import { createUser, getUserByEmail } from '@/services/user';
-
-import * as arctic from 'arctic';
 import { google } from '@/utils/arctic';
 
 export async function loginAction(_, formData) {
