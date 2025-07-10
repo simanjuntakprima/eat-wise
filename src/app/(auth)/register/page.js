@@ -7,8 +7,8 @@ import { AlertState } from '@/app/_components/alert-state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import { registerAction } from '../action';
 import { SocialLogin } from '../_components/social-login';
+import { registerAction } from '../action';
 
 export default function Page() {
   const [state, action, pending] = useActionState(registerAction, null);
