@@ -20,6 +20,11 @@ export async function createMealPlan(formData) {
   }
   const frequency = formData.get('frequency');
 
+
+  if (!budget || !days || frequencyCount === 0) {
+    return { success: false, message: 'Data wajib diisi tidak lengkap.' };
+  }
+
   const instructions = `You are a smart meal planning assistant designed for users who want to eat healthy, save time, and stay within their budget. Suggest weekly meal plans based on the user's dietary preferences, calorie goals, cooking time availability, and budget constraints.
 
 Your response must follow the format below:
