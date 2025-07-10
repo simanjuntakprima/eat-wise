@@ -98,7 +98,7 @@ export default function CreateMeal() {
 
         {/* Allergies */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-800" htmlFor="alergi">
+          <label className="text-sm font-medium text-gray-800" htmlFor="allergies">
             Food Allergies
           </label>
           <Textarea
