@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import { useActionState } from 'react';
-// import { FcGoogle } from 'react-icons/fc';
 
+// import { FcGoogle } from 'react-icons/fc';
 import { AlertState } from '@/app/_components/alert-state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import { loginAction } from '../action';
 import { SocialLogin } from '../_components/social-login';
+import { loginAction } from '../action';
 
 export default function Page() {
   const [state, action, pending] = useActionState(loginAction, null);
