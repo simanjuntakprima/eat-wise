@@ -1,8 +1,14 @@
 
+import '../globals.css';
+
 export default function Layout({ children }) {
   return (
-    <div className="max-h-screen">
-      <div>{children}</div>
-    </div>
+    <html>
+      <body>
+        <div className="max-h-screen">
+          <div>{children}</div>
+        </div>
+      </body>
+    </html>
   );
 }
