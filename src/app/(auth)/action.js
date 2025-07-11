@@ -34,10 +34,10 @@ export async function loginAction(_, formData) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 30,
-    path: '/',
+    path: '/dashboard',
   });
 
-  redirect('/');
+  redirect('/dashboard');
 }
 
 export async function registerAction(formData) {
