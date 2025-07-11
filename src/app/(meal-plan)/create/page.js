@@ -49,7 +49,13 @@ export default function CreateMeal() {
           <label className="text-sm font-medium text-gray-800" htmlFor="budget">
             Meal Budget
           </label>
-          <Input id="budget" type="number" name="budget" placeholder="Rp 100000" className="bg-[#F2EAD3] placeholder:text-gray-500" />
+          <Input
+            id="budget"
+            type="number"
+            name="budget"
+            placeholder="Rp 100000"
+            className="bg-[#F2EAD3] placeholder:text-gray-500"
+          />
         </div>
 
         {/* Duration */}
@@ -58,8 +64,16 @@ export default function CreateMeal() {
           <div className="flex items-center space-x-6 pt-2">
             {['3', '5', '7'].map((value) => (
               <div key={value} className="flex items-center gap-2">
-                <input id={`days-${value}`} name="days" type="radio" value={value} className="h-4 w-4 border-gray-300 text-[#A4907C] focus:ring-[#8C7A6B]" />
-                <label htmlFor={`days-${value}`} className="text-sm font-normal text-gray-700">{value} Hari</label>
+                <input
+                  id={`days-${value}`}
+                  name="days"
+                  type="radio"
+                  value={value}
+                  className="h-4 w-4 border-gray-300 text-[#A4907C] focus:ring-[#8C7A6B]"
+                />
+                <label htmlFor={`days-${value}`} className="text-sm font-normal text-gray-700">
+                  {value} Hari
+                </label>
               </div>
             ))}
           </div>
@@ -93,7 +107,12 @@ export default function CreateMeal() {
           <label className="text-sm font-medium text-gray-800" htmlFor="allergies">
             Food Allergies
           </label>
-          <Textarea id="allergies" name="allergies" placeholder="Contoh: kacang, susu" className="bg-[#F2EAD3] placeholder:text-gray-500" />
+          <Textarea
+            id="allergies"
+            name="allergies"
+            placeholder="Contoh: kacang, susu"
+            className="bg-[#F2EAD3] placeholder:text-gray-500"
+          />
         </div>
 
         {/* Food Preferences */}
@@ -106,11 +125,13 @@ export default function CreateMeal() {
               <SelectValue placeholder="Preferences" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="a">a</SelectItem>
-              <SelectItem value="b">b</SelectItem>
-              <SelectItem value="c">c</SelectItem>
-              <SelectItem value="d">d</SelectItem>
-              <SelectItem value="e">e</SelectItem>
+              <SelectItem value="Indonesia">Indonesia</SelectItem>
+              <SelectItem value="Java">Java</SelectItem>
+              <SelectItem value="Sunda">Sunda</SelectItem>
+              <SelectItem value="Manado">Manado</SelectItem>
+              <SelectItem value="Vietnam">Vietnam</SelectItem>
+              <SelectItem value="Makassar">Makassar</SelectItem>
+              <SelectItem value="Cina">Cina</SelectItem>
             </SelectContent>
           </Select>
           <input type="hidden" name="type" value={type} />
@@ -118,7 +139,11 @@ export default function CreateMeal() {
 
         {/* Submit Button */}
         <div>
-          <Button type="submit" disabled={load} className="mt-4 w-full rounded-md bg-[#A4907C] px-4 py-2 text-white hover:bg-[#8C7A6B] disabled:bg-gray-400">
+          <Button
+            type="submit"
+            disabled={load}
+            className="mt-4 w-full rounded-md bg-[#A4907C] px-4 py-2 text-white hover:bg-[#8C7A6B] disabled:bg-gray-400"
+          >
             {load ? 'Loading...' : 'Submit'}
           </Button>
         </div>
