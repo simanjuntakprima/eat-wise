@@ -87,4 +87,3 @@ export default function FoodModal({ foods }) {
     </Dialog>
   );
 }
-
