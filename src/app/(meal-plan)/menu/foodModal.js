@@ -2,8 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-
-import { Button } from '@/components/ui/button'
+import { Button } from '@/src/components/ui/button';
 
 export default function FoodModal({ foods }) {
   const [isOpen, setIsOpen] = useState(false)
