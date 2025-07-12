@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import FoodModal from '@/src/app/(meal-plan)/menu/foodModal';
 
+
 export default function Dashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
