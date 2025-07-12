@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -88,3 +87,4 @@ export default function FoodModal({ foods }) {
     </Dialog>
   );
 }
+

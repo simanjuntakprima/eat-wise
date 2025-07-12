@@ -1,4 +1,3 @@
-
 import '../../globals.css';
 
 import { Avatar } from '@radix-ui/react-avatar';
