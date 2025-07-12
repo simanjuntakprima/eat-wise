@@ -28,14 +28,9 @@ export default function FoodModal({ foods }) {
 
   return (
     <>
-      
       <div className="grid grid-cols-5 gap-4">
         {foods.map((food, i) => (
-          <Button
-            key={i}
-            onClick={() => openModal(i)}
-            className="bg-amber-100 text-black w-full h-20"
-          >
+          <Button key={i} onClick={() => openModal(i)} className="h-20 w-full bg-amber-100 text-black">
             {food.title}
           </Button>
         ))}
@@ -43,25 +38,16 @@ export default function FoodModal({ foods }) {
 
       {/* Global Modal */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-xl w-[90%] max-w-xl relative">
-            <button
-              className="absolute top-2 right-2 text-xl"
-              onClick={closeModal}
-            >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="relative w-[90%] max-w-xl rounded-xl bg-white p-6">
+            <button className="absolute top-2 right-2 text-xl" onClick={closeModal}>
               ×
             </button>
 
-            <h2 className="text-xl font-bold mb-4">{currentFood.title}</h2>
+            <h2 className="mb-4 text-xl font-bold">{currentFood.title}</h2>
 
-            <div className="flex justify-center mb-4">
-              <Image
-                src={currentFood.image}
-                alt={currentFood.title}
-                width={150}
-                height={100}
-                className="rounded"
-              />
+            <div className="mb-4 flex justify-center">
+              <Image src={currentFood.image} alt={currentFood.title} width={150} height={100} className="rounded" />
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-sm">
@@ -71,7 +57,7 @@ export default function FoodModal({ foods }) {
               </div>
               <div>
                 <p className="font-semibold">Bahan</p>
-                <ul className="list-decimal ml-5">
+                <ul className="ml-5 list-decimal">
                   {currentFood.ingredients.map((item, i) => (
                     <li key={i}>{item}</li>
                   ))}
@@ -79,7 +65,7 @@ export default function FoodModal({ foods }) {
               </div>
               <div className="col-span-2">
                 <p className="font-semibold">Cara Memasak</p>
-                <ol className="list-decimal ml-5">
+                <ol className="ml-5 list-decimal">
                   {currentFood.steps.map((item, i) => (
                     <li key={i}>{item}</li>
                   ))}
@@ -87,19 +73,11 @@ export default function FoodModal({ foods }) {
               </div>
             </div>
 
-            <div className="flex justify-between mt-6">
-              <Button
-                onClick={goPrev}
-                disabled={activeIndex === 0}
-                className="bg-[#4E3636] text-black"
-              >
+            <div className="mt-6 flex justify-between">
+              <Button onClick={goPrev} disabled={activeIndex === 0} className="bg-[#4E3636] text-black">
                 ←
               </Button>
-              <Button
-                onClick={goNext}
-                disabled={activeIndex === foods.length - 1}
-                className="bg-[#4E3636] text-black"
-              >
+              <Button onClick={goNext} disabled={activeIndex === foods.length - 1} className="bg-[#4E3636] text-black">
                 →
               </Button>
             </div>
@@ -107,5 +85,5 @@ export default function FoodModal({ foods }) {
         </div>
       )}
     </>
-  )
+  );
 }
