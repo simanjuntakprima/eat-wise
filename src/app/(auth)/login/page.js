@@ -1,15 +1,16 @@
+
 'use client';
 
 import Link from 'next/link';
 import { useActionState } from 'react';
-
 // import { FcGoogle } from 'react-icons/fc';
+
 import { AlertState } from '@/app/_components/alert-state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import { SocialLogin } from '../_components/social-login';
 import { loginAction } from '../action';
+import { SocialLogin } from '../_components/social-login';
 
 export default function Page() {
   const [state, action, pending] = useActionState(loginAction, null);
@@ -25,10 +26,10 @@ export default function Page() {
             "url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=781&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
         }}
       >
-        <div className="flex h-full w-full items-center justify-center bg-black/50 p-2 text-white">
-          <div className="ml-40 bg-[#B5A668]/70 p-5 rounded-lg">
+        <div className="flex h-full w-full items-center justify-center bg-black/50 p-10 text-white">
+          <div>
             <h2 className="mb-4 text-3xl font-bold">Sign up to start meal-planning</h2>
-            <p className="mt-2 text-[#8D2611] text-xl font-bold">Grab a ready-made meal guide.</p>
+            <p className="mt-2">Grab a ready-made meal guide.</p>
           </div>
         </div>
       </div>
