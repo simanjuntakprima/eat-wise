@@ -1,7 +1,9 @@
+
 import React, { use } from 'react';
 
-import { googleLoginAction } from '../action';
 import { Button } from '@/components/ui/button';
+
+import { googleLoginAction } from '../action';
 
 export const SocialLogin = () => {
   return (
@@ -13,3 +15,4 @@ export const SocialLogin = () => {
     </form>
   );
 };
+

@@ -202,3 +202,4 @@ day 3 : breakfast(donat ayam), lunch(ayam hijau), dinner(gado-gado pedas)*/
     };
   }
 }
+
