@@ -33,6 +33,7 @@ export default function FoodModal({ foods }) {
   const currentFood = foods[activeIndex];
 
   return (
+
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <div className="grid grid-cols-5 gap-4">
         {foods.map((food, i) => (
