@@ -32,7 +32,7 @@ export async function getEventsByCategory(categorySlug) {
 }
 
 export async function getEvents(userId) {
-  return await prisma.event.findMany({
+  return await prisma.user.findMany({
     where: {
       userId,
     },
@@ -40,7 +40,7 @@ export async function getEvents(userId) {
 }
 
 export async function getEvent(id) {
-  return await prisma.event.findUnique({
+  return await prisma.user.findUnique({
     where: {
       id,
     },
@@ -48,7 +48,7 @@ export async function getEvent(id) {
 }
 
 export async function getEventBySlug(slug) {
-  return await prisma.event.findUnique({
+  return await prisma.user.findUnique({
     where: {
       slug,
     },
