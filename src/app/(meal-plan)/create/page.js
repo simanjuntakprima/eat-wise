@@ -62,7 +62,7 @@ export default function CreateMeal() {
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-800">Meal Plan Duration</label>
           <div className="flex items-center space-x-6 pt-2">
-            {['3', '5', '7'].map((value) => (
+            {['1', '3', '5', '7'].map((value) => (
               <div key={value} className="flex items-center gap-2">
                 <input
                   id={`days-${value}`}
