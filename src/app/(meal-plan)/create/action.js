@@ -1,6 +1,8 @@
 'use server';
 
 import { openai } from '@/utils/openai';
+import prisma from '@/utils/prisma';
+import { Prisma } from '@prisma/client';
 
 export async function createMealPlan(formData) {
   const budget = formData.get('budget');
@@ -67,13 +69,16 @@ Include weekly prep tips, nutrition facts if relevant, smart grocery lists at th
     //     type,
     //   },
     // });
-    const input = `Create a meal plan with the following details:
-     Budget: Rp ${budget}
-     Duration: ${days} days
-     Frequency: ${mealTimes} meals per day
-     Allergies: ${allergies}
-     Type of cuisine: ${type}`;
-    console.log('Input for OpenAI:', input);
+
+    // const input = `Create a meal plan with the following details:
+    //  Budget: Rp ${budget}
+    //  Duration: ${days} days
+    //  Frequency: ${mealTimes} meals per day
+    //  Allergies: ${allergies}
+    //  Type of cuisine: ${type}`;
+    // console.log('Input for OpenAI:', input);
+
+
     // const result = await openai.responses.parse({
     //   model: 'gpt-4.1',
     //   instructions: instructions,
@@ -153,6 +158,17 @@ Include weekly prep tips, nutrition facts if relevant, smart grocery lists at th
     //   },
     // });
 
+    const input = JSON.stringify({
+      budget: `Rp ${budget}`,
+      duration: `${days} days`,
+      frequency: `${mealTimes} meals per day`,
+      allergies,
+      cuisineType: type,
+    });
+
+    console.log('Input for OpenAI:', JSON.stringify(input, null, 2));
+
+
     const result = await openai.responses.parse({
       model: 'gpt-4.1',
       instructions: `You are a smart meal planning assistant designed for users who want to eat healthy, save time, and stay within their budget. Suggest weekly meal plans based on the user's dietary preferences, calorie goals, cooking time availability, and budget constraints. Please provide only the cuisine title in short`,
@@ -193,6 +209,7 @@ day 3 : breakfast(donat ayam), lunch(ayam hijau), dinner(gado-gado pedas)*/
     return {
       success: true,
       result: result.output_parsed,
+      headerData : input,
     };
   } catch (error) {
     console.error('Error in createMealPlan:', error);
@@ -203,3 +220,149 @@ day 3 : breakfast(donat ayam), lunch(ayam hijau), dinner(gado-gado pedas)*/
   }
 }
 
+export async function getOrCreateMealId(recipeName, mealPlanId, mealType) {
+  const existing = await prisma.recipe.findFirst({
+    where: {
+      name: {
+        contains: recipeName,
+        mode: 'insensitive',
+      },
+    },
+  });
+
+  if (existing){
+    return existing.id;
+  }else{
+    const newRecipe = await generateRecipe(recipeName);
+    console.log("ini resepnya", newRecipe);
+    const newRecipeData = await prisma.recipe.create({
+      data: {
+        name: recipeName,
+        ingredients: newRecipe?.result?.ingredients,
+        nutitionFacts: newRecipe?.result?.nutritionFacts,
+        instructions: newRecipe?.result?.instructions,
+      },
+    });
+
+    const newMeal = await prisma.meal.create({
+      data: {
+        mealPlanId: mealPlanId,
+        recipeId: newRecipeData?.id,
+        name: recipeName,
+        type: mealType
+      }
+    })
+
+
+    return newMeal.id.toString();
+  }
+}
+
+export async function generateRecipe(recipeName) {
+  try{
+    const input = JSON.stringify({
+      recipeName: recipeName
+    });
+
+    const result = await openai.responses.parse({
+      model: 'gpt-4.1',
+      instructions: `You are a smart meal planning assistant designed for users who want to eat healthy, save time, and stay within their budget. Suggest recipe that contain ingridients, instructtion, and nutrition fact based on recipe name and avoid the ingridient that make user allergies`,
+      input: input,
+      text: {
+      format: {
+        type: 'json_schema',
+        strict: true,
+        name: 'recipe',
+        schema: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            ingredients: { type: 'string' },
+            nutritionFacts: { type: 'string' },
+            instructions: { type: 'string' },
+          },
+          required: ['name', 'ingredients', 'nutritionFacts', 'instructions'],
+          additionalProperties: false,
+        },
+      },
+  },
+    });
+    console.log('Recipe Result:', result.output_parsed);
+    return {
+      success: true,
+      result: result.output_parsed,
+      headerData : input,
+    };
+  }catch(error){
+    console.error('Error in createRecipe:', error);
+    return {
+      success: false,
+      message: 'Error creating recipe. Please try again later.',
+    };
+  }
+}
+
+export async function saveMealPlan(headerData, result) {
+
+  console.log("ini data header ya", headerData);
+  
+  // for (let i = 0; i < result.days.length; i++) {
+  //   const day = result.days[i];
+
+  //   const details = Object.entries(day).map(([mealType, menu]) => ({
+  //     mealType,
+  //     menu,
+  //   }));
+
+  //   await prisma.mealPlan.create({
+  //     data: {
+  //       title: `Meal Plan Day ${i + 1}`,
+  //       days: i+1,
+  //       budget: result.budget,
+  //       duration: result.duration,
+  //       allergies: result.allergies,
+  //       cuisineCategories: result.cuisineCategories,
+  //       mealPlanDetails: {
+  //         create: [
+  //           { mealType: 'breakfast', menu: day?.breakfast },
+  //           { mealType: 'lunch', menu: day?.lunch },
+  //           { mealType: 'dinner', menu: day?.dinner },
+  //         ]
+  //       },
+  //       user: 'cmcxgawpt0006hbilissxxk9r',
+  //     }
+  //   });
+  // }
+
+  for (let i = 0; i < result.days.length; i++) {
+    const day = result.days[i];
+
+    const mealPlan = await prisma.mealPlan.create({
+      data: {
+        title: `Meal Plan Day ${i + 1}`,
+        days: i + 1,
+        userId: 'cmcxgawpt0006hbilissxxk9r',
+        budget: headerData?.budget ?? 0,
+        allergies: headerData?.allergies ?? "-",
+        cuisineCategories: headerData?.cuisineCategories ?? "-",
+      },
+    });
+
+    const breakfastId = await getOrCreateMealId(day?.breakfast, mealPlan.id, 'breakfast');
+    const lunchId = await getOrCreateMealId(day?.lunch, mealPlan.id, 'lunch');
+    const dinnerId = await getOrCreateMealId(day?.dinner, mealPlan.id, 'dinner');
+
+    await prisma.mealPlanDetail.create({
+      data: {
+        mealPlanId: mealPlan?.id,
+        day: i + 1,
+        breakfast: breakfastId ?? null,
+        lunch: lunchId ?? null,
+        dinner: dinnerId ?? null,
+      },
+    });
+  }
+
+
+
+} 
