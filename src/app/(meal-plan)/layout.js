@@ -1,4 +1,3 @@
-
 import '../globals.css';
 
 import { Avatar } from '@radix-ui/react-avatar';
@@ -12,7 +11,7 @@ export const metadata = {
 
 // const user = {
 //   name: session?.user?.name ?? 'Guest',
-//   avatarUrl: session?.user?.image ?? null, 
+//   avatarUrl: session?.user?.image ?? null,
 // };
 
 // const getInitials = (name) =>
@@ -38,27 +37,42 @@ export default function RootLayout({ children }) {
           </div>
 
           <div className="cardContent flex flex-col gap-4">
-            <Button href="" className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]">
+            <Button
+              href="#"
+              className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]"
+            >
               Create Meal Plan!
             </Button>
           </div>
 
           <div className="cardContent flex flex-col gap-4">
-            <Button href="" className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]">
+            <Button
+              href="#"
+              className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]"
+            >
               Menu
             </Button>
-            <Button href="" className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]">
+            <Button
+              href="#"
+              className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]"
+            >
               History
             </Button>
-            <Button href="" className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]">
+            <Button
+              href="#"
+              className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]"
+            >
               User Account
             </Button>
           </div>
 
           <div className="cardContent mt-auto">
-            <Button href="" className="flex w-full items-center justify-between rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]">
+            <Button
+              href="#"
+              className="flex w-full items-center justify-between rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]"
+            >
               Logout
-              <LogOut className="w-5 h-5" />
+              <LogOut className="h-5 w-5" />
             </Button>
           </div>
         </aside>

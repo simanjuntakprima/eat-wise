@@ -32,7 +32,6 @@ model MealPlan {
   status    String @default("processing")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  meals     Meal[]
   mealPlanDetails MealPlanDetail[]
   @@unique([id, userId])
 }
@@ -54,8 +53,6 @@ model MealPlanDetail {
 
 model Meal {
   id        String   @id @default(cuid())
-  mealPlanId    String
-  mealplan      MealPlan    @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
   recipeId String
   name     String
   type     String
@@ -66,11 +63,10 @@ model Meal {
   breakfastPlans  MealPlanDetail[]  @relation("BreakfastRelation")
   lunchPlans      MealPlanDetail[]  @relation("LunchRelation")
   dinnerPlans     MealPlanDetail[]  @relation("DinnerRelation")
-   @@unique([id, mealPlanId])
 }
 
 model Recipe {
-  id        String   @id @default(cuid())
+  id       String   @id @default(cuid())
   name    String
   nutitionFacts Json?
   ingredients Json?
