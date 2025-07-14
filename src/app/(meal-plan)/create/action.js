@@ -1,11 +1,12 @@
 'use server';
 
 import { format } from 'date-fns';
-
 import { aiGeneration } from '@/trigger/tasks';
 import prisma from '@/utils/prisma';
 import { aiGeneration } from '@/trigger/tasks';
 import { openai } from '@/utils/openai';
+import prisma from '@/utils/prisma';
+import { Prisma } from '@prisma/client';
 import { s3Client } from '@/utils/r2';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 
