@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { createSession, verifyPassword } from '@/services/auth';
 import { createUser, getUserByEmail } from '@/services/user';
 import { google } from '@/utils/arctic';
+import prisma from '@/utils/prisma';
 
 export async function loginAction(_, formData) {
   const cookieStore = await cookies();
@@ -34,7 +35,7 @@ export async function loginAction(_, formData) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 30,
-    path: '/dashboard',
+    path: '/',
   });
 
   redirect('/dashboard');
@@ -67,6 +68,34 @@ export async function googleLoginAction() {
   const url = google.createAuthorizationURL(state, codeVerifier, scopes);
   cookieStore.set('codeVerfier', codeVerifier);
   redirect(url);
+}
+
+export async function logoutAction() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get('session');
+
+  if (session?.value) {
+    try {
+      await prisma.session.update({
+        where: { id: session.value },
+        data: {
+          expiresAt: new Date(),
+        },
+      })
+    } catch (error) {
+      console.error('Error expiring session in DB:', error);
+    }
+  }
+
+  cookieStore.set({
+    name: 'session',
+    value: '',
+    path: '/',
+    expires: new Date(0), 
+    httpOnly: true,
+  })
+
+  redirect('/login');
 }
 
 
