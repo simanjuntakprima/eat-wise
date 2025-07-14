@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto+Slab:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -118,25 +119,34 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Nunito', 'Helvetica', 'Arial', sans-serif;
   }
 
   h1 {
     @apply text-2xl font-bold tracking-tight;
+    font-family: 'Nunito', 'Helvetica', 'Arial', sans-serif;
   }
 
   h2 {
     @apply text-xl font-bold tracking-tight;
+    font-family: 'Nunito', 'Helvetica', 'Arial', sans-serif;
   }
 
   h3 {
     @apply text-lg font-bold tracking-tight;
+    font-family: 'Nunito', 'Helvetica', 'Arial', sans-serif;
   }
 
   p {
     @apply text-muted-foreground text-sm;
+    font-family: 'Nunito', 'Helvetica', 'Arial', sans-serif;
+  }
+
+  label {
+    font-family: 'Nunito', 'Helvetica', 'Arial', sans-serif;
   }
 
   .cardContent {
-    @apply bg-[#ECDFCC]/10 backdrop-blur-md rounded-xl p-5 mb-3 w-full max-w-[220px] mx-auto
+    @apply mx-auto mb-3 w-full max-w-[220px] rounded-xl bg-[#ECDFCC]/10 p-5 backdrop-blur-md;
   }
 }
