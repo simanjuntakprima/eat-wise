@@ -16,6 +16,8 @@ export default function FoodModal({ foods }) {
     setIsOpen(true);
   };
 
+  const closeModal = () => setIsOpen(false);
+
   const goNext = () => {
     if (activeIndex < foods.length - 1) setActiveIndex((i) => i + 1);
   };
@@ -40,7 +42,6 @@ export default function FoodModal({ foods }) {
           </Button>
         ))}
       </div>
-
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle className="text-xl">{currentFood.title}</DialogTitle>

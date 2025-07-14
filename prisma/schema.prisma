@@ -16,67 +16,36 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  mealPlans    MealPlan[]
-  Sessions    Session[]
+  mealPlans MealPlan[]
+  Sessions  Session[]
 }
 
 model MealPlan {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title     String
-  days     Int
-  budget   Decimal? @db.Decimal(10, 2)
-  allergies Json?
+  id                String           @id @default(cuid())
+  userId            String
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title             String
+  days              Int
+  budget            Decimal?         @db.Decimal(10, 2)
+  allergies         Json?
   cuisineCategories Json?
-  status    String @default("processing")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  meals     Meal[]
-  mealPlanDetails MealPlanDetail[]
+  status            String           @default("processing")
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  mealPlanDetails   MealPlanDetail[]
+
   @@unique([id, userId])
 }
 
 model MealPlanDetail {
-  id        String   @id @default(cuid())
-  mealPlanId    String
-  mealplanid      MealPlan     @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
-  day     Int
-  breakfast     String?
-  lunch         String?
-  dinner        String?
-  mealbreakfast Meal?   @relation("BreakfastRelation", fields: [breakfast], references: [id])
-  meallunch     Meal?   @relation("LunchRelation", fields: [lunch], references: [id])
-  mealdinner    Meal?   @relation("DinnerRelation", fields: [dinner], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Meal {
-  id        String   @id @default(cuid())
-  mealPlanId    String
-  mealplan      MealPlan    @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
-  recipeId String
-  name     String
-  type     String
-  imageUrl String?
-  calories     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
-  breakfastPlans  MealPlanDetail[]  @relation("BreakfastRelation")
-  lunchPlans      MealPlanDetail[]  @relation("LunchRelation")
-  dinnerPlans     MealPlanDetail[]  @relation("DinnerRelation")
-   @@unique([id, mealPlanId])
-}
-
-model Recipe {
-  id        String   @id @default(cuid())
-  name    String
-  nutitionFacts Json?
-  ingredients Json?
-  instructions Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  mealPlanId String
+  mealplanid MealPlan @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  day        Int
+  breakfast  Json?
+  lunch      Json?
+  dinner     Json?
+  updatedAt  DateTime @updatedAt
 }
 
 model Session {

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -8,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
-import { createMealPlan, saveMealPlan } from './action';
+import { createMealPlan } from './action';
+// import { saveMealPlan } from './function';
 
 export default function CreateMeal() {
   const [type, setType] = useState('');
@@ -22,12 +22,12 @@ export default function CreateMeal() {
     const formData = new FormData(event.target);
     try {
       const res = await createMealPlan(formData);
-      if (res?.success) {
-        saveMealPlan(res.headerData, res.result);
-        setAiResult(res.result);
-      } else {
-        setAiResult('Unsuccessful to create meal plan. Try again!');
-      }
+      // if (res?.success) {
+      //   saveMealPlan(res.headerData, res.result);
+      //   setAiResult(res.result);
+      // } else {
+      //   setAiResult('Unsuccessful to create meal plan. Try again!');
+      // }
     } catch (error) {
       console.error(error);
       setAiResult('Error while sending to server');
@@ -64,7 +64,7 @@ export default function CreateMeal() {
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-800">Meal Plan Duration</label>
           <div className="flex items-center space-x-6 pt-2">
-            {['3', '5', '7'].map((value) => (
+            {['1', '3', '5', '7'].map((value) => (
               <div key={value} className="flex items-center gap-2">
                 <input
                   id={`days-${value}`}
