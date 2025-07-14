@@ -1,5 +1,4 @@
 'use server';
-
 import { format } from 'date-fns';
 import { aiGeneration } from '@/trigger/tasks';
 import prisma from '@/utils/prisma';
