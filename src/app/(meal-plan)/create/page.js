@@ -3,11 +3,10 @@
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-
 import { createMealPlan } from './action';
+import BudgetInput from './_components/budgetInput';
 // import { saveMealPlan } from './function';
 
 export default function CreateMeal() {
@@ -44,20 +43,19 @@ export default function CreateMeal() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-10">
+    <div className="min-h-screen rounded-xl bg-[#D5DADC] px-6 py-10 shadow-md">
+      <div className="mb-1">
+        <h3 className="mx-auto grid max-w-3xl gap-4 font-light italic">
+          Please fill this form based on your preferences
+        </h3>
+      </div>
       <form onSubmit={handleSubmit} className="mx-auto grid max-w-3xl gap-4">
         {/* Meal Budget */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-800" htmlFor="budget">
             Meal Budget
           </label>
-          <Input
-            id="budget"
-            type="number"
-            name="budget"
-            placeholder="Rp 100000"
-            className="bg-[#F2EAD3] placeholder:text-gray-500"
-          />
+          <BudgetInput />
         </div>
 
         {/* Duration */}
@@ -112,8 +110,8 @@ export default function CreateMeal() {
           <Textarea
             id="allergies"
             name="allergies"
-            placeholder="Contoh: kacang, susu"
-            className="bg-[#F2EAD3] placeholder:text-gray-500"
+            placeholder="i.e: kacang, susu"
+            className="bg-[#f1f0eb] placeholder:text-gray-500"
           />
         </div>
 
@@ -140,13 +138,13 @@ export default function CreateMeal() {
         </div>
 
         {/* Submit Button */}
-        <div>
+        <div className="flex w-full justify-end">
           <Button
             type="submit"
             disabled={load}
-            className="mt-4 w-full rounded-md bg-[#A4907C] px-4 py-2 text-white hover:bg-[#8C7A6B] disabled:bg-gray-400"
+            className="mt-3 w-fit rounded-md bg-[#A4907C] px-4 py-[6px] text-sm text-white hover:bg-[#8C7A6B] disabled:bg-gray-400"
           >
-            {load ? 'Loading...' : 'Submit'}
+            {load ? 'Loading...' : 'Generate Meal Plan Now'}
           </Button>
         </div>
       </form>

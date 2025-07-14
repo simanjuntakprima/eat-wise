@@ -218,3 +218,7 @@ export const generateMealPlanSchema = (daysCount, mealTimes) => {
     },
   };
 };
+
+export function sanitizeCurrency(inputString) {
+  return parseInt(inputString.replace(/\D/g, ''), 10);
+}
