@@ -41,7 +41,7 @@ export default function RootLayout({ children }) {
               href="#"
               className="rounded-md bg-[#DED2B3] px-5 py-2 font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
-              Explore Menu
+              Generate Meal Plan
             </Button>
           </div>
 
