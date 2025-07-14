@@ -1,6 +1,7 @@
 'use server';
-import { aiGeneration } from '@/trigger/tasks';
 import { format } from 'date-fns';
+
+import { aiGeneration } from '@/trigger/tasks';
 import prisma from '@/utils/prisma';
 
 export async function createMealPlan(formData) {
@@ -45,8 +46,9 @@ export async function createMealPlan(formData) {
     });
 
     const payloadTask = {
-      instruction: inputGenerateMealPlan,
       mealPlanId: mealPlan.id.toString(),
+      instruction: inputGenerateMealPlan,
+      mealTimes: mealTimes,
       allergies: allergies,
     };
 

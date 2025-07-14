@@ -1,31 +1,31 @@
-import { openai } from '@/utils/openai';
-import { s3Client } from '@/utils/r2';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import prisma from '@/utils/prisma';
-export async function processImagesMeals(mealName, mealIndex) {
-  console.log(mealName);
-  const mealImagePrompt = `Generate an image prompt for the dish with realistic photo-style, thumbnail quality, slightly blurred edges, low compression detail, e.g., A delicious ${mealName}`;
-  // const resultImg = await openai.images.generate({
-  //   model: 'gpt-image-1',
-  //   prompt: mealImagePrompt,
-  //   size: 'auto',
-  // });
 
-  const folder = 'images';
+import { openai } from '@/utils/openai';
+import prisma from '@/utils/prisma';
+import { s3Client } from '@/utils/r2';
+
+export async function processImagesMeals(mealImagePrompt, mealPlanId) {
+  const resultImg = await openai.images.generate({
+    model: 'gpt-image-1',
+    prompt: mealImagePrompt,
+    size: 'auto',
+  });
+
+  const folder = `images/${mealPlanId}`;
   const key = Date.now() + '.png';
-  // const buffer = Buffer.from(resultImg.data[0].b64_json, 'base64');
+  const buffer = Buffer.from(resultImg.data[0].b64_json, 'base64');
   const path = process.env.R2_PUBLIC_S3_ENDPOINT + `/${folder}/${key}`;
 
   try {
-    // const fileUpload = await s3Client.send(
-    //   new PutObjectCommand({
-    //     Bucket: 'eatwise',
-    //     Key: `${folder}/${key}`,
-    //     Body: buffer,
-    //     ContentType: 'image/png',
-    //   }),
-    // );
-    return { success: true, path, mealIndex };
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: 'eatwise',
+        Key: `${folder}/${key}`,
+        Body: buffer,
+        ContentType: 'image/png',
+      }),
+    );
+    return { success: true, path };
   } catch (error) {
     console.error('Error uploading image:', error);
     return { success: false, message: 'Error uploading image.' };
