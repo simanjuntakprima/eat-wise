@@ -178,3 +178,43 @@ export async function saveMealPlan(headerData, result) {
     });
   }
 }
+
+export const generateMealPlanSchema = (daysCount, mealTimes) => {
+  const mealSchema = {
+    type: 'object',
+    properties: {
+      dishName: { type: 'string' },
+      ingredients: { type: 'string' },
+      instructions: { type: 'string' },
+      imagePrompt: { type: 'string' },
+    },
+    required: ['dishName', 'ingredients', 'instructions', 'imagePrompt'],
+    additionalProperties: false,
+  };
+
+  const perDaySchema = Object.fromEntries(mealTimes.map((time) => [time, { ...mealSchema }]));
+
+  const daysArray = Array.from({ length: daysCount }).map(() => ({
+    type: 'object',
+    properties: perDaySchema,
+    required: mealTimes,
+    additionalProperties: false,
+  }));
+
+  return {
+    type: 'json_schema',
+    strict: true,
+    name: 'meal_plan',
+    schema: {
+      type: 'object',
+      properties: {
+        days: {
+          type: 'array',
+          items: daysArray,
+        },
+      },
+      required: ['days'],
+      additionalProperties: false,
+    },
+  };
+};
