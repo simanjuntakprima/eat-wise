@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import FoodModal from '@/src/app/(meal-plan)/menu/foodModal';
+import FoodModal from '@/app/(meal-plan)/menu/foodModal';
 
 export default function Dashboard() {
   const router = useRouter();
