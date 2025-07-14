@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="flex h-screen">
-        <aside className="flex w-64 flex-col items-center gap-4 bg-[#4E3636] p-4 text-white">
+        <aside className="flex w-64 flex-col items-center gap-4 rounded-lg bg-gradient-to-b from-[#FAF8F4]/90 to-[#C7B590]/90 p-4 text-[#1C1C1C] shadow-xl backdrop-blur-sm">
           <div className="cardContent flex flex-col items-center">
             {/* <Avatar.Root className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gray-300">
               <Avatar.Image className="h-full w-full object-cover" src={user.avatarUrl} alt={user.name} />
@@ -39,28 +39,28 @@ export default function RootLayout({ children }) {
           <div className="cardContent flex flex-col gap-4">
             <Button
               href="#"
-              className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]"
+              className="rounded-md bg-[#DED2B3] px-5 py-2 font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
-              Create Meal Plan!
+              Explore Menu
             </Button>
           </div>
 
           <div className="cardContent flex flex-col gap-4">
             <Button
               href="#"
-              className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]"
+              className="rounded-md bg-[#DED2B3] px-5 py-2 font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
               Menu
             </Button>
             <Button
               href="#"
-              className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]"
+              className="rounded-md bg-[#DED2B3] px-5 py-2 font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
               History
             </Button>
             <Button
               href="#"
-              className="rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]"
+              className="rounded-md bg-[#DED2B3] px-5 py-2 font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
               User Account
             </Button>
@@ -69,7 +69,7 @@ export default function RootLayout({ children }) {
           <div className="cardContent mt-auto">
             <Button
               href="#"
-              className="flex w-full items-center justify-between rounded bg-[#F2EAD3] px-4 py-2 text-black transition-colors duration-200 hover:bg-[#8a8578] active:bg-[#F2EAD3]"
+              className="rounded-md bg-[#A58E7A] px-5 py-2 font-semibold text-[#FAF8F4] shadow-sm transition duration-300 hover:bg-[#8F7763] active:scale-[0.98]"
             >
               Logout
               <LogOut className="h-5 w-5" />
