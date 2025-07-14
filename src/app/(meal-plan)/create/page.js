@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -10,12 +10,21 @@ import BudgetInput from './_components/budgetInput';
 // import { saveMealPlan } from './function';
 
 export default function CreateMeal() {
-  const [type, setType] = useState('');
   const [aiResult, setAiResult] = useState('');
+  const [budget, setBudget] = useState(0);
+  const [duration, setDuration] = useState('');
+  const [meals, setMeals] = useState([]);
+  const [type, setType] = useState('');
   const [load, setLoad] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  async function handleSubmit(event) {
-    event.preventDefault();
+  useEffect(() => {
+    const valid = budget >= 1000 && duration !== '' && meals.length > 0 && type !== '';
+    setIsFormValid(valid);
+  }, [budget, duration, meals, type]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoad(true);
     setAiResult('');
     const formData = new FormData(event.target);
@@ -33,7 +42,7 @@ export default function CreateMeal() {
     } finally {
       setLoad(false);
     }
-  }
+  };
 
   // Daftar pilihan untuk checkbox
   const mealOptions = [
@@ -43,119 +52,115 @@ export default function CreateMeal() {
   ];
 
   return (
-    <div className="min-h-screen rounded-xl bg-[#D5DADC] px-6 py-10 shadow-md">
-      <div className="mb-1">
-        <h3 className="mx-auto grid max-w-3xl gap-4 font-light italic">
-          Please fill this form based on your preferences
-        </h3>
+    <form onSubmit={handleSubmit} className="mx-auto grid max-w-3xl gap-4">
+      {/* Meal Budget */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-800" htmlFor="budget">
+          Meal Budget
+        </label>
+        <BudgetInput onBudgetChange={(val) => setBudget(val)} />
       </div>
-      <form onSubmit={handleSubmit} className="mx-auto grid max-w-3xl gap-4">
-        {/* Meal Budget */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-800" htmlFor="budget">
-            Meal Budget
-          </label>
-          <BudgetInput />
-        </div>
 
-        {/* Duration */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-800">Meal Plan Duration</label>
-          <div className="flex items-center space-x-6 pt-2">
-            {['1', '3', '5', '7'].map((value) => (
+      {/* Duration */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-800">Meal Plan Duration</label>
+        <div className="flex items-center space-x-6 pt-2">
+          {['1', '3', '5', '7'].map((value) => {
+            const number = parseInt(value, 10);
+            const labelText = `${number} ${number === 1 ? 'Day' : 'Days'}`;
+
+            return (
               <div key={value} className="flex items-center gap-2">
                 <input
                   id={`days-${value}`}
                   name="days"
                   type="radio"
                   value={value}
+                  checked={duration === value}
+                  onChange={(e) => setDuration(e.target.value)}
                   className="h-4 w-4 border-gray-300 text-[#A4907C] focus:ring-[#8C7A6B]"
                 />
                 <label htmlFor={`days-${value}`} className="text-sm font-normal text-gray-700">
-                  {value} Hari
+                  {labelText}
                 </label>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
+      </div>
 
-        {/* --- BLOK YANG DIUBAH --- */}
-        {/* Meals per Day (Checkbox) */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-800">Meals per Day</label>
-          <div className="flex items-center space-x-6 pt-2">
-            {mealOptions.map((meal) => (
-              <div key={meal.id} className="flex items-center gap-2">
-                <input
-                  id={meal.id}
-                  name="mealTimes" // Nama yang sama untuk semua checkbox
-                  type="checkbox"
-                  value={meal.id} // Nilai yang akan dikirim: 'breakfast', 'lunch', 'dinner'
-                  className="h-4 w-4 rounded border-gray-300 text-[#A4907C] focus:ring-[#8C7A6B]"
-                />
-                <label htmlFor={meal.id} className="text-sm font-normal text-gray-700">
-                  {meal.label}
-                </label>
-              </div>
-            ))}
-          </div>
+      {/* Meals per Day */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-800">Meals per Day</label>
+        <div className="flex items-center space-x-6 pt-2">
+          {mealOptions.map((meal) => (
+            <div key={meal.id} className="flex items-center gap-2">
+              <input
+                id={meal.id}
+                name="mealTimes"
+                type="checkbox"
+                value={meal.id}
+                checked={meals.includes(meal.id)}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  const value = e.target.value;
+                  setMeals((prev) => (checked ? [...prev, value] : prev.filter((item) => item !== value)));
+                }}
+                className="h-4 w-4 rounded border-gray-300 text-[#A4907C] focus:ring-[#8C7A6B]"
+              />
+              <label htmlFor={meal.id} className="text-sm font-normal text-gray-700">
+                {meal.label}
+              </label>
+            </div>
+          ))}
         </div>
-        {/* --- AKHIR BLOK YANG DIUBAH --- */}
+      </div>
 
-        {/* Allergies */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-800" htmlFor="allergies">
-            Food Allergies
-          </label>
-          <Textarea
-            id="allergies"
-            name="allergies"
-            placeholder="i.e: kacang, susu"
-            className="bg-[#f1f0eb] placeholder:text-gray-500"
-          />
-        </div>
+      {/* Allergies */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-800" htmlFor="allergies">
+          Food Allergies
+        </label>
+        <Textarea
+          id="allergies"
+          name="allergies"
+          placeholder="i.e: kacang, susu"
+          className="bg-[#f1f0eb] placeholder:text-gray-500"
+        />
+      </div>
 
-        {/* Food Preferences */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-800" htmlFor="type">
-            Food Preferences
-          </label>
-          <Select onValueChange={(value) => setType(value)}>
-            <SelectTrigger id="type" className="bg-[#F2EAD3]">
-              <SelectValue placeholder="Preferences" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Indonesia">Indonesia</SelectItem>
-              <SelectItem value="Java">Java</SelectItem>
-              <SelectItem value="Sunda">Sunda</SelectItem>
-              <SelectItem value="Manado">Manado</SelectItem>
-              <SelectItem value="Vietnam">Vietnam</SelectItem>
-              <SelectItem value="Makassar">Makassar</SelectItem>
-              <SelectItem value="Cina">Cina</SelectItem>
-            </SelectContent>
-          </Select>
-          <input type="hidden" name="type" value={type} />
-        </div>
+      {/* Food Preferences */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-800" htmlFor="type">
+          Food Preferences
+        </label>
+        <Select onValueChange={(value) => setType(value)}>
+          <SelectTrigger id="type" className="bg-[#F2EAD3]">
+            <SelectValue placeholder="Preferences" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Indonesia">Indonesia</SelectItem>
+            <SelectItem value="Java">Java</SelectItem>
+            <SelectItem value="Sunda">Sunda</SelectItem>
+            <SelectItem value="Manado">Manado</SelectItem>
+            <SelectItem value="Vietnam">Vietnam</SelectItem>
+            <SelectItem value="Makassar">Makassar</SelectItem>
+            <SelectItem value="Cina">Cina</SelectItem>
+          </SelectContent>
+        </Select>
+        <input type="hidden" name="type" value={type} />
+      </div>
 
-        {/* Submit Button */}
-        <div className="flex w-full justify-end">
-          <Button
-            type="submit"
-            disabled={load}
-            className="mt-3 w-fit rounded-md bg-[#A4907C] px-4 py-[6px] text-sm text-white hover:bg-[#8C7A6B] disabled:bg-gray-400"
-          >
-            {load ? 'Loading...' : 'Generate Meal Plan Now'}
-          </Button>
-        </div>
-      </form>
-
-      {load && <p className="mt-4 text-center text-gray-700">Generating your meal plan . . .</p>}
-      {aiResult && (
-        <div className="mx-auto mt-6 max-w-3xl rounded bg-white p-4 text-sm whitespace-pre-wrap shadow">
-          <h2 className="mb-2 text-lg font-semibold">Meal Plan Result:</h2>
-          {aiResult}
-        </div>
-      )}
-    </div>
+      {/* Submit Button */}
+      <div className="flex w-full justify-end">
+        <Button
+          type="submit"
+          disabled={load || !isFormValid}
+          className="mt-3 w-fit rounded-md bg-[#A4907C] px-4 py-[6px] text-sm text-white hover:bg-[#8C7A6B] disabled:bg-gray-400"
+        >
+          {load ? 'Loading...' : 'Generate Meal Plan Now'}
+        </Button>
+      </div>
+    </form>
   );
 }
