@@ -48,6 +48,7 @@ export async function createMealPlan(formData) {
     const payloadTask = {
       mealPlanId: mealPlan.id.toString(),
       instruction: inputGenerateMealPlan,
+      days: days,
       mealTimes: mealTimes,
       allergies: allergies,
     };
