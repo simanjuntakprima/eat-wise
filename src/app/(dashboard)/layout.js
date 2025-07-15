@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import LogoutButton from '@/app/_components/logout-button';
 import { getCurrentSession } from '@/services/auth';
 import { redirect } from 'next/navigation';
+import { Users } from 'lucide-react';
 
 
 export const metadata = {
