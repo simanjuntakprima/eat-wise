@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import FoodModal from '@/src/app/(meal-plan)/menu/foodModal';
+import FoodModal from '@/app/(meal-plan)/menu/foodModal';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -12,9 +12,27 @@ export default function Dashboard() {
   useEffect(() => {
     setTimeout(() => {
       setMealData({
-        breakfast: ['Loading...', 'Loading...'],
-        lunch: ['Loading...', 'Loading...'],
-        dinner: ['Loading...', 'Loading...'],
+        breakfast: [
+          {
+            image:
+              'https://images.unsplash.com/photo-1465014925804-7b9ede58d0d7?q=80&w=776&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            title: 'Avocado Toast with Poached Egg',
+          },
+        ],
+        lunch: [
+          {
+            image:
+              'https://images.unsplash.com/photo-1680675706515-fb3eb73116d4?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            title: 'Grilled Chicken with Quinoa Salad',
+          },
+        ],
+        dinner: [
+          {
+            image:
+              'https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            title: 'Salmon with Roasted Vegetables',
+          },
+        ],
       });
       setLoading(false);
     }, 2000);
@@ -60,18 +78,30 @@ export default function Dashboard() {
             <h2 className="mb-4 text-xl font-semibold">{mealType}</h2>
             <div className="grid gap-3">
               {mealData &&
-                mealData[mealType.toLowerCase()].map((img, index) => (
+                mealData[mealType.toLowerCase()].map((meal, index) => (
                   <div
                     key={index}
-                    className="h-44 cursor-pointer overflow-hidden rounded-lg bg-[#fef5dd]"
+                    className="relative h-44 cursor-pointer overflow-hidden rounded-lg bg-[#fef5dd] shadow-md"
                     onClick={() => {
                       setSelectedMeal({
-                        title: `${mealType} - Menu ${index + 1}`,
-                        image: mealData[mealType.toLowerCase()][index],
+                        title: `${mealType} - ${meal.title}`,
+                        image: meal.image,
                       });
                       setIsOpen(true);
                     }}
-                  ></div>
+                  >
+                    <div
+                      className="absolute inset-0 bg-cover bg-center"
+                      style={{ backgroundImage: `url(${meal.image})` }}
+                    />
+
+                    <div className="bg-opacity-30 absolute inset-0 bg-black" />
+
+                    <div className="relative z-10 flex h-full flex-col items-center justify-center text-white">
+                      <h3 className="text-xl font-semibold">{mealType}</h3>
+                    </div>
+                    <p className="mt-2 text-center text-sm font-medium text-gray-700">{meal.title}</p>
+                  </div>
                 ))}
             </div>
           </div>
@@ -89,7 +119,9 @@ export default function Dashboard() {
         </div>
       )}
 
-      {selectedMeal && <FoodModal isOpen={isOpen} currentFood={selectedMeal} closeModal={() => setIsOpen(false)} />}
+      {selectedMeal && (
+        <FoodModal isOpen={isOpen} currentFood={selectedMeal} closeModal={() => setIsOpen(false)} />
+      )}
     </div>
   );
 }
