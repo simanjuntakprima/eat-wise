@@ -28,6 +28,7 @@ export default function CreateMeal() {
     setLoad(true);
     setAiResult('');
     const formData = new FormData(event.target);
+    
     try {
       const res = await createMealPlan(formData);
       // if (res?.success) {

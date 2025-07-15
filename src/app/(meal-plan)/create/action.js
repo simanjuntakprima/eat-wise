@@ -3,8 +3,11 @@ import { format } from 'date-fns';
 import { sanitizeCurrency } from './function';
 import { aiGeneration } from '@/trigger/tasks';
 import prisma from '@/utils/prisma';
+import { getCurrentSession } from '@/services/auth';
 
 export async function createMealPlan(formData) {
+  const userSession = await getCurrentSession();
+
   const now = new Date();
   const formatted = format(now, 'eeee, dd MMMM yyyy HH:mm:ss');
   const budgetInput = sanitizeCurrency(formData.get('budget'));
@@ -35,7 +38,7 @@ ${allergies ? `Allergies: ${allergies}\n` : ''}Type of cuisine: ${type}`;
       data: {
         title: `Meal Plan For ${formatted}`,
         days: parseInt(days),
-        userId: 'cmcxgawpt0006hbilissxxk9r',
+        userId:  userSession.userId,
         budget: budget,
         allergies: allergies,
         cuisineCategories: type,
