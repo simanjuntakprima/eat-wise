@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -118,6 +119,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Nunito', 'Helvetica', 'Arial', sans-serif;
   }
 
   h1 {
@@ -137,6 +139,6 @@
   }
 
   .cardContent {
-    @apply bg-[#ECDFCC]/10 backdrop-blur-md rounded-xl p-5 mb-3 w-full max-w-[220px] mx-auto
+    @apply mx-auto mb-3 w-full max-w-[220px] rounded-xl bg-[#ECDFCC]/10 p-5 backdrop-blur-md;
   }
 }

@@ -1,5 +1,6 @@
 'use server';
 import { format } from 'date-fns';
+import { sanitizeCurrency } from './function';
 import { aiGeneration } from '@/trigger/tasks';
 import prisma from '@/utils/prisma';
 import { getCurrentSession } from '@/services/auth';
@@ -9,11 +10,12 @@ export async function createMealPlan(formData) {
 
   const now = new Date();
   const formatted = format(now, 'eeee, dd MMMM yyyy HH:mm:ss');
-
-  const budget = formData.get('budget');
+  const budgetInput = sanitizeCurrency(formData.get('budget'));
+  const budget = budgetInput;
   const days = String(formData.get('days'));
 
-  const allergies = formData.get('allergies') || 'tidak ada';
+  console.log('allergies', formData.get('allergies'));
+  const allergies = formData.get('allergies');
   const type = String(formData.get('type'));
   console.log('Type of cuisine:', type);
 
@@ -26,11 +28,10 @@ export async function createMealPlan(formData) {
 
   try {
     const inputGenerateMealPlan = `Create a meal plan with the following details:
-    Budget: Rp ${budget}
-    Duration: ${days} days
-    Frequency: ${mealTimes} meals per day
-    Allergies: ${allergies}
-    Type of cuisine: ${type}`;
+Budget: Rp ${budget}
+Duration: ${days} days
+Frequency: ${mealTimes} meals per day
+${allergies ? `Allergies: ${allergies}\n` : ''}Type of cuisine: ${type}`;
     console.log('Input for OpenAI:', inputGenerateMealPlan);
 
     const mealPlan = await prisma.mealPlan.create({
