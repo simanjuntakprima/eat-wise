@@ -3,6 +3,9 @@ import '../globals.css';
 import { Avatar } from '@radix-ui/react-avatar';
 import LogoutButton from '../_components/logout-button';
 import { Button } from '@/components/ui/button';
+import { getCurrentSession } from '@/services/auth';
+import { redirect } from 'next/navigation';
+
 
 export const metadata = {
   title: 'EatWise',
@@ -21,7 +24,15 @@ export const metadata = {
 //     .join('')
 //     .toUpperCase();
 
+  const userSession = await getCurrentSession();
+
+
 export default function RootLayout({ children }) {
+
+  if (!userSession) {
+    redirect('/login');
+  }
+
   return (
     <html lang="en">
       <body className="flex h-screen">
