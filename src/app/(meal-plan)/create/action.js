@@ -1,6 +1,6 @@
 'use server';
 import { format } from 'date-fns';
-import { sanitizeCurrency } from './function';
+import { sanitizeCurrency, getRangeMealPlan } from './function';
 import { aiGeneration } from '@/trigger/tasks';
 import prisma from '@/utils/prisma';
 import { getCurrentSession } from '@/services/auth';
@@ -13,7 +13,9 @@ export async function createMealPlan(formData) {
   const budgetInput = sanitizeCurrency(formData.get('budget'));
   const budget = budgetInput;
   const days = String(formData.get('days'));
-
+  const [startDate, endDate] = getRangeMealPlan(parseInt(days));
+  console.log('start time', startDate);
+  console.log('end time', endDate);
   console.log('allergies', formData.get('allergies'));
   const allergies = formData.get('allergies');
   const type = String(formData.get('type'));
@@ -38,10 +40,12 @@ ${allergies ? `Allergies: ${allergies}\n` : ''}Type of cuisine: ${type}`;
       data: {
         title: `Meal Plan For ${formatted}`,
         days: parseInt(days),
-        userId:  userSession.userId,
+        userId: userSession.userId,
         budget: budget,
         allergies: allergies,
         cuisineCategories: type,
+        startDate: startDate,
+        endDate: endDate,
       },
       select: {
         id: true,
