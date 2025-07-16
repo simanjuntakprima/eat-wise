@@ -38,6 +38,7 @@ model MealPlan {
   @@unique([id, userId])
 }
 
+
 model MealPlanDetail {
   id         String   @id @default(cuid())
   mealPlanId String

@@ -47,33 +47,33 @@ export default function RootLayout({ children }) {
           </div>
 
           <div className="cardContent flex flex-col gap-4">
-            <Button
-              href="#"
-              className="rounded-md bg-[#DED2B3] px-5 py-2 font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
+            <a
+              href="/create"
+              className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
               Generate Meal Plan
-            </Button>
+            </a>
           </div>
 
           <div className="cardContent flex flex-col gap-4">
-            <Button
+            <a
               href="#"
-              className="rounded-md bg-[#DED2B3] px-5 py-2 font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
+              className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
               Menu
-            </Button>
-            <Button
+            </a>
+            <a
               href="#"
-              className="rounded-md bg-[#DED2B3] px-5 py-2 font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
+              className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
               History
-            </Button>
-            <Button
+            </a>
+            <a
               href="#"
-              className="rounded-md bg-[#DED2B3] px-5 py-2 font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
+              className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
               User Account
-            </Button>
+            </a>
           </div>
 
           <div className="cardContent mt-auto">

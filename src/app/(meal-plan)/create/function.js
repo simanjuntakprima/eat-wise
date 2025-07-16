@@ -3,6 +3,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { openai } from '@/utils/openai';
 import prisma from '@/utils/prisma';
 import { s3Client } from '@/utils/r2';
+import { now } from 'moment';
 
 export default async function ProcessImagesMeals(mealName) {
   console.log(mealName);
@@ -221,4 +222,14 @@ export const generateMealPlanSchema = (daysCount, mealTimes) => {
 
 export function sanitizeCurrency(inputString) {
   return parseInt(inputString.replace(/\D/g, ''), 10);
+}
+
+export function getRangeMealPlan(duration) {
+  const now = new Date();
+  const startDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+  const endDate = new Date(startDateTime);
+  endDate.setDate(endDate.getDate() + duration);
+
+  const endDateTime = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 0, 0, 0);
+  return [startDateTime, endDateTime];
 }

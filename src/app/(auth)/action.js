@@ -34,17 +34,17 @@ export async function loginAction(_, formData) {
   cookieStore.set('session', session.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 24 * 30,
+    maxAge: 60 * 5,
     path: '/',
   });
-
   redirect('/dashboard');
 }
 
-export async function registerAction(formData) {
+export async function registerAction(_, formData) {
   const name = formData.get('name');
   const email = formData.get('email');
   const password = formData.get('password');
+  const cookieStore = await cookies();
 
   if (!name || !email || !password) {
     console.log('All fields are required');
@@ -52,11 +52,20 @@ export async function registerAction(formData) {
   }
 
   const user = await getUserByEmail(email);
+
   if (user) {
+    console.log('ini user', user);
     return { error: 'User already exists' };
   }
 
   const newUser = await createUser(name, email, password);
+  const session = await createSession(newUser.id);
+  cookieStore.set('session', session.id, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 60 * 5,
+    path: '/',
+  });
   return { success: 'User created successfully', user: newUser };
 }
 
@@ -81,7 +90,7 @@ export async function logoutAction() {
         data: {
           expiresAt: new Date(),
         },
-      })
+      });
     } catch (error) {
       console.error('Error expiring session in DB:', error);
     }
@@ -91,11 +100,9 @@ export async function logoutAction() {
     name: 'session',
     value: '',
     path: '/',
-    expires: new Date(0), 
+    expires: new Date(0),
     httpOnly: true,
-  })
+  });
 
   redirect('/login');
 }
-
-
