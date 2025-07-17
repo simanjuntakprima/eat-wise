@@ -1,15 +1,15 @@
-import { prisma } from '@/utils/prisma';
+import prisma from '@/utils/prisma';
 import moment from 'moment';
 import React from 'react';
 import { getCurrentSession } from '@/services/auth';
-const userSession = await getCurrentSession();
 
+const userSession = await getCurrentSession();
 export default async function Dashboard() {
-  console.log('user', userSession.id);
+  console.log('user', userSession.userId);
   const today = new Date();
 
   const mealPlanWithDate = await prisma.mealPlan.findFirst({
-    where: { userId: userSession.id },
+    where: { userId: userSession.userId },
     select: {
       startDate: true,
       endDate: true,
@@ -21,31 +21,21 @@ export default async function Dashboard() {
   });
 
   if (!mealPlanWithDate) console.log('MealPlan not found');
-
+  console.log(mealPlanWithDate.id);
   if (mealPlanWithDate) {
-    const { startDate } = mealPlanWithDate;
+    const startDate = mealPlanWithDate.startDate;
 
     // Step 2: Calculate current day index based on date
     const dayIndex = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
-
+    console.log('day ke', dayIndex);
     // Step 3: Get meal details for that day + include MealPlan
-    const result = await prisma.MealPlanDetail.findMany({
+    const resultMealPlanDetail = await prisma.MealPlanDetail.findMany({
       where: {
-        mealPlanId,
+        mealPlanId: mealPlanWithDate.id,
         day: dayIndex,
       },
-      include: {
-        mealPlan: {
-          select: {
-            id: true,
-            title: true,
-            startDate: true,
-            endDate: true,
-            userId: true,
-          },
-        },
-      },
     });
+    console.log('meal plan detail', resultMealPlanDetail);
   }
 
   // const mealToday =
