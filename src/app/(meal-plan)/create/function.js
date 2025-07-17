@@ -53,6 +53,7 @@ export async function getOrCreateMealId(recipeName, mealPlanId, mealType, allerg
     return recipeData.id;
   } else {
     const newRecipe = await generateRecipe(recipeName, allergies);
+    console.log('ini resepnya', newRecipe);
     const newRecipeData = await prisma.recipe.create({
       data: {
         name: recipeName,
@@ -225,6 +226,7 @@ export function sanitizeCurrency(inputString) {
 
 export function getRangeMealPlan(duration) {
   const now = new Date();
+  console.log('duration ', duration);
   const startDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
   const endDate = new Date(startDateTime);
   endDate.setDate(endDate.getDate() + duration);
