@@ -53,7 +53,6 @@ export async function getOrCreateMealId(recipeName, mealPlanId, mealType, allerg
     return recipeData.id;
   } else {
     const newRecipe = await generateRecipe(recipeName, allergies);
-    console.log('ini resepnya', newRecipe);
     const newRecipeData = await prisma.recipe.create({
       data: {
         name: recipeName,

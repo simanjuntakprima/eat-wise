@@ -78,10 +78,19 @@ export const aiGeneration = task({
           },
         });
       }
+
+      const mealPlanUpdated = await prisma.mealPlan.update({
+        where: {
+          id: mealPlanId,
+        },
+        data: {
+          status: 'completed',
+        },
+      });
+      return { status: 'completed' };
     } catch (error) {
       logger.error('Error inserting to db plan detail');
       throw error;
     }
-    return mealPlanId;
   },
 });

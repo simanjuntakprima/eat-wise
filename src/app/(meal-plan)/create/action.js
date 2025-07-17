@@ -4,6 +4,7 @@ import { sanitizeCurrency, getRangeMealPlan } from './function';
 import { aiGeneration } from '@/trigger/tasks';
 import prisma from '@/utils/prisma';
 import { getCurrentSession } from '@/services/auth';
+import { redirect } from 'next/navigation';
 
 export async function createMealPlan(formData) {
   const userSession = await getCurrentSession();
@@ -14,9 +15,7 @@ export async function createMealPlan(formData) {
   const budget = budgetInput;
   const days = String(formData.get('days'));
   const [startDate, endDate] = getRangeMealPlan(parseInt(days));
-  console.log('start time', startDate);
-  console.log('end time', endDate);
-  console.log('allergies', formData.get('allergies'));
+
   const allergies = formData.get('allergies');
   const type = String(formData.get('type'));
   console.log('Type of cuisine:', type);
@@ -28,44 +27,37 @@ export async function createMealPlan(formData) {
     return { success: false, message: 'Data wajib diisi tidak lengkap.' };
   }
 
-  try {
-    const inputGenerateMealPlan = `Create a meal plan with the following details:
+  const inputGenerateMealPlan = `Create a meal plan with the following details:
 Budget: Rp ${budget}
 Duration: ${days} days
 Frequency: ${mealTimes} meals per day
 ${allergies ? `Allergies: ${allergies}\n` : ''}Type of cuisine: ${type}`;
-    console.log('Input for OpenAI:', inputGenerateMealPlan);
+  console.log('Input for OpenAI:', inputGenerateMealPlan);
 
-    const mealPlan = await prisma.mealPlan.create({
-      data: {
-        title: `Meal Plan For ${formatted}`,
-        days: parseInt(days),
-        userId: userSession.userId,
-        budget: budget,
-        allergies: allergies,
-        cuisineCategories: type,
-        startDate: startDate,
-        endDate: endDate,
-      },
-      select: {
-        id: true,
-      },
-    });
-
-    const payloadTask = {
-      mealPlanId: mealPlan.id.toString(),
-      instruction: inputGenerateMealPlan,
-      days: days,
-      mealTimes: mealTimes,
+  const mealPlan = await prisma.mealPlan.create({
+    data: {
+      title: `Meal Plan For ${formatted}`,
+      days: parseInt(days),
+      userId: userSession.userId,
+      budget: budget,
       allergies: allergies,
-    };
+      cuisineCategories: type,
+      startDate: startDate,
+      endDate: endDate,
+    },
+    select: {
+      id: true,
+    },
+  });
 
-    await aiGeneration.trigger({ payloadTask });
-  } catch (error) {
-    console.error('Error in createMealPlan:', error);
-    return {
-      success: false,
-      message: 'Error creating meal plan. Please try again later.',
-    };
-  }
+  const payloadTask = {
+    mealPlanId: mealPlan.id.toString(),
+    instruction: inputGenerateMealPlan,
+    days: days,
+    mealTimes: mealTimes,
+    allergies: allergies,
+  };
+
+  await aiGeneration.trigger({ payloadTask });
+  redirect('/dashboard');
 }
