@@ -1,32 +1,35 @@
-
 import Link from 'next/link';
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { getMealPlanHistory } from './action';
 
-const getMealPlans = async () => {
-  return [
-    { id: '1', createdAt: new Date('2025-07-07') },
-    { id: '2', createdAt: new Date('2025-07-07') },
-    { id: '3', createdAt: new Date('2025-07-07') },
-    { id: '4', createdAt: new Date('2025-07-07') },
-    { id: '5', createdAt: new Date('2025-07-07') },
-    { id: '6', createdAt: new Date('2025-07-07') },
-    { id: '7', createdAt: new Date('2025-07-07') },
-    { id: '8', createdAt: new Date('2025-07-07') },
-    { id: '9', createdAt: new Date('2025-07-07') },
-  ];
-};
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 
-export default async function DashboardPage() {
-  const mealPlans = await getMealPlans();
+export default async function HistoryPage({ searchParams = {} }) {
+  const page = Number(searchParams.page) || 1;
+  const pageSize = 12;
+
+  const { items: mealPlanHist, total } = await getMealPlanHistory({
+    page,
+    pageSize,
+  });
+
+  const totalPages = Math.ceil(total / pageSize);
 
   const formatDate = (date) => {
+    const d = typeof date === 'string' ? new Date(date) : date;
     return new Intl.DateTimeFormat('id-ID', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
-    }).format(date);
+    }).format(d);
   };
 
   return (
@@ -34,11 +37,11 @@ export default async function DashboardPage() {
       <h1 className="mb-6 text-3xl font-bold">My Meal Plans</h1>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {mealPlans.map((plan) => (
-          <Card key={plan.id} className="border-none bg-[#F2EAD3] transition-shadow hover:shadow-lg">
+        {mealPlanHist.map((plan) => (
+          <Card key={plan.id} className="border-none bg-[#F2EAD3] hover:shadow-lg">
             <CardContent className="p-4">
               <Button asChild variant="ghost" className="h-full w-full text-center">
-                <Link href="/menu">
+                <Link href={`menu/${plan.id}`}>
                   <div className="flex flex-col">
                     <span>Meal plan</span>
                     <span>{formatDate(plan.createdAt)}</span>
@@ -49,6 +52,35 @@ export default async function DashboardPage() {
           </Card>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <Pagination className="mt-8">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href={`?page=${page > 1 ? page - 1 : 1}`}
+              />
+            </PaginationItem>
+
+            {Array.from({ length: totalPages }, (_, i) => (
+              <PaginationItem key={i + 1}>
+                <PaginationLink
+                  href={`?page=${i + 1}`}
+                  isActive={i + 1 === page}
+                >
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            <PaginationItem>
+              <PaginationNext
+                href={`?page=${page < totalPages ? page + 1 : totalPages}`}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </div>
   );
 }
