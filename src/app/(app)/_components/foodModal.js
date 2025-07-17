@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -47,7 +48,15 @@ export default function FoodModal({ foods }) {
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="grid gap-4 text-sm">
+          <div className="flex justify-center">
+            <Image src={currentFood.image} alt={currentFood.title} width={150} height={100} className="rounded" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="font-semibold">Informasi Gizi</p>
+              <p>{currentFood.nutrition}</p>
+            </div>
             <div>
               <p className="font-semibold">Bahan</p>
               <ul className="list-inside list-disc">
@@ -67,14 +76,14 @@ export default function FoodModal({ foods }) {
           </div>
         </div>
 
-        {/* <DialogFooter className="flex w-full justify-between">
+        <DialogFooter className="flex w-full justify-between">
           <Button onClick={goPrev} disabled={activeIndex === 0} className="bg-[#4E3636] text-white">
             ←
           </Button>
           <Button onClick={goNext} disabled={activeIndex === foods.length - 1} className="bg-[#4E3636] text-white">
             →
           </Button>
-        </DialogFooter> */}
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

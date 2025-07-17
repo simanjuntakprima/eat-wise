@@ -23,9 +23,10 @@ export const metadata = {
 //     .join('')
 //     .toUpperCase();
 
-const userSession = await getCurrentSession();
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const userSession = await getCurrentSession();
+  
   if (!userSession) {
     redirect('/login');
   }
