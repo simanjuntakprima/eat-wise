@@ -234,34 +234,3 @@ export function getRangeMealPlan(duration) {
   const endDateTime = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), 0, 0, 0);
   return [startDateTime, endDateTime];
 }
-
-export function getMealImage(type) {
-  switch (type) {
-    case 'breakfast':
-      return (
-        <img
-          src="https://images.unsplash.com/photo-1465014925804-7b9ede58d0d7?q=80&w=776&auto=format&fit=crop"
-          className="items-center justify-center rounded-lg"
-        ></img>
-      );
-    case 'lunch':
-      return (
-        <img
-          src="https://images.unsplash.com/photo-1680675706515-fb3eb73116d4?q=80&w=880&auto=format&fit=crop"
-          className="items-center justify-center rounded-lg"
-        ></img>
-      );
-    case 'dinner':
-      <img
-        src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=687&auto=format&fit=crop"
-        className="items-center justify-center rounded-lg"
-      ></img>;
-    default:
-      return (
-        <img
-          src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=687&auto=format&fit=crop"
-          className="items-center justify-center rounded-lg"
-        ></img>
-      );
-  }
-}
