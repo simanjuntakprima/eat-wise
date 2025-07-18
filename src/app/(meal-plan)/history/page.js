@@ -11,6 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import DashboardEmpty from '@/app/(app)/_components/emptyMealPlan';
 
 export default async function HistoryPage({ searchParams = {} }) {
   const page = Number(searchParams.page) || 1;
@@ -20,7 +21,10 @@ export default async function HistoryPage({ searchParams = {} }) {
     page,
     pageSize,
   });
-
+  if (mealPlanHist === 0) {
+    return <DashboardEmpty></DashboardEmpty>;
+  }
+  console.log('Meal Plan History', mealPlanHist);
   const totalPages = Math.ceil(total / pageSize);
 
   const formatDate = (date) => {
@@ -57,26 +61,19 @@ export default async function HistoryPage({ searchParams = {} }) {
         <Pagination className="mt-8">
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious
-                href={`?page=${page > 1 ? page - 1 : 1}`}
-              />
+              <PaginationPrevious href={`?page=${page > 1 ? page - 1 : 1}`} />
             </PaginationItem>
 
             {Array.from({ length: totalPages }, (_, i) => (
               <PaginationItem key={i + 1}>
-                <PaginationLink
-                  href={`?page=${i + 1}`}
-                  isActive={i + 1 === page}
-                >
+                <PaginationLink href={`?page=${i + 1}`} isActive={i + 1 === page}>
                   {i + 1}
                 </PaginationLink>
               </PaginationItem>
             ))}
 
             <PaginationItem>
-              <PaginationNext
-                href={`?page=${page < totalPages ? page + 1 : totalPages}`}
-              />
+              <PaginationNext href={`?page=${page < totalPages ? page + 1 : totalPages}`} />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
