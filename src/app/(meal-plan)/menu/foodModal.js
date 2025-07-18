@@ -36,7 +36,7 @@ export default function FoodModal({ foods }) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <div className="grid grid-cols-5 gap-4">
         {foods.map((food, i) => (
-          <Button key={i} onClick={() => openModal(i)} className="h-20 w-full bg-amber-100 text-black">
+          <Button key={i} onClick={() => openModal(i)} className="h-20 w-50 bg-amber-100 text-black">
             {food.title}
           </Button>
         ))}
