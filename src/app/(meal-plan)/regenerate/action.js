@@ -1,14 +1,16 @@
 'use server';
 import { format } from 'date-fns';
-import { sanitizeCurrency, getRangeMealPlan } from './function';
+import { sanitizeCurrency, getRangeMealPlan } from '../create/function';
 import { aiGeneration } from '@/trigger/tasks';
 import prisma from '@/utils/prisma';
+import { Prisma } from '@prisma/client';
 import { getCurrentSession } from '@/services/auth';
 import { redirect } from 'next/navigation';
 
-export async function createMealPlan(formData) {
+export async function regenerateMealPlanUser(formData) {
   const userSession = await getCurrentSession();
 
+  const existingMealPlanId = formData.get('existingMealPlanId');
   const now = new Date();
   const formatted = format(now, 'eeee, dd MMMM yyyy HH:mm:ss');
   const budgetInput = sanitizeCurrency(formData.get('budget'));
@@ -33,7 +35,10 @@ Duration: ${days} days
 Frequency: ${mealTimes} meals per day
 ${allergies ? `Allergies: ${allergies}\n` : ''}Type of cuisine: ${type}`;
   console.log('Input for OpenAI:', inputGenerateMealPlan);
-
+  //delete existing meal plan
+  const deleteResult = await deleteExistingMealPlan(existingMealPlanId, userSession.userId);
+  console.log(deleteResult);
+  // create new meal plan
   const mealPlan = await prisma.mealPlan.create({
     data: {
       title: `Meal Plan For ${formatted}`,
@@ -62,10 +67,49 @@ ${allergies ? `Allergies: ${allergies}\n` : ''}Type of cuisine: ${type}`;
   redirect('/dashboard');
 }
 
-export async function getMealPlanById(mealPlanId) {
-  const userSession = await getCurrentSession();
-  const mealPlan = await prisma.mealPlan.findUnique({
-    where: { id: mealPlanId, userId: userSession.userId },
-  });
-  return { ...mealPlan, budget: mealPlan.budget?.toNumber?.() || Number(mealPlan.budget) || 0 };
+export async function getMealPlanData(mealPlanId) {
+  try {
+    const [mealPlan, mealPlanDetail] = await prisma.$transaction([
+      prisma.mealPlan.findFirst({
+        where: { id: mealPlanId },
+      }),
+      prisma.mealPlanDetail.findFirst({
+        where: { mealPlanId, day: 1 },
+      }),
+    ]);
+
+    if (!mealPlan) {
+      throw new Error('Meal plan not found');
+    }
+
+    return {
+      // Plan data
+      ...mealPlan,
+      budget: mealPlan.budget?.toNumber?.() || Number(mealPlan.budget) || 0,
+
+      // Day 1 meal data
+      ...(mealPlanDetail || {}),
+
+      // Ensure these fields are included even if null
+      cuisineCategories: mealPlan.cuisineCategories,
+      allergies: mealPlan.allergies,
+      days: mealPlan.days,
+    };
+  } catch (error) {
+    console.error('Error fetching meal plan:', error);
+    throw error;
+  }
 }
+
+export async function deleteExistingMealPlan(mealPlanId, userId) {
+  try {
+    const mealPlan = await prisma.mealPlan.delete({
+      where: { id: mealPlanId, userId: userId },
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting meal plan:', error);
+    return { success: false, error: 'Failed to delete meal plan' };
+  }
+}
+
