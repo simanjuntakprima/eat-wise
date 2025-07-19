@@ -21,27 +21,33 @@ export function getMealImage(type) {
       return (
         <img
           src="https://images.unsplash.com/photo-1465014925804-7b9ede58d0d7?q=80&w=776&auto=format&fit=crop"
-          className="items-center justify-center rounded-lg"
-        ></img>
+          alt="Breakfast"
+          className="h-full w-full rounded-lg object-cover"
+        />
       );
     case 'lunch':
       return (
         <img
           src="https://images.unsplash.com/photo-1680675706515-fb3eb73116d4?q=80&w=880&auto=format&fit=crop"
-          className="items-center justify-center rounded-lg"
-        ></img>
+          alt="Lunch"
+          className="h-full w-full rounded-lg object-cover"
+        />
       );
     case 'dinner':
-      <img
-        src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=687&auto=format&fit=crop"
-        className="items-center justify-center rounded-lg"
-      ></img>;
-    default:
       return (
         <img
           src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=687&auto=format&fit=crop"
-          className="items-center justify-center rounded-lg"
-        ></img>
+          alt="Dinner"
+          className="h-full w-full rounded-lg object-cover"
+        />
+      );
+    default:
+      return (
+        <img
+          src="https://images.unsplash.com/photo-1592417817038-d13fd7342605?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fG1lYWx8ZW58MHx8MHx8fDA%3D"
+          alt="Default meal"
+          className="h-full w-full rounded-lg object-cover"
+        />
       );
   }
 }

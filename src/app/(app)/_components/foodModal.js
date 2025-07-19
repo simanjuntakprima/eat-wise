@@ -29,7 +29,7 @@ export default function FoodModal({ mealType, mealData, isOpen, onClose }) {
                 ))}
               </p>
             )}
-            
+
             {mealData?.instructions && (
               <p className="text-sm">
                 <span className="font-medium">Instructions:</span> 
