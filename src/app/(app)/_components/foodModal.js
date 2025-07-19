@@ -22,11 +22,24 @@ export default function FoodModal({ mealType, mealData, isOpen, onClose }) {
             {mealData?.ingredients && (
               <p className="text-sm">
                 <span className="font-medium">Ingredients:</span> {mealData?.ingredients}
+                {mealData.ingredients.split('\n').map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
               </p>
             )}
+            
             {mealData?.instructions && (
               <p className="text-sm">
-                <span className="font-medium">Instructions:</span> {mealData?.instructions}
+                <span className="font-medium">Instructions:</span> 
+                {mealData.instructions.split('\n').map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
               </p>
             )}
           </div>
