@@ -1,20 +1,17 @@
 'use client';
 
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { useActionState } from 'react';
 
 import { AlertState } from '@/app/_components/alert-state';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import { SocialLogin } from '../_components/social-login';
 import { registerAction } from '../action';
-import { timeout } from '@trigger.dev/sdk/v3';
-import { set } from 'date-fns';
-import { redirect } from 'next/navigation';
 
 export default function Page() {
-  const [state, action, pending] = useActionState(registerAction, { success: null, error: null });
+  const [state, action] = useActionState(registerAction, { success: null, error: null });
   if (state.success) {
     setTimeout(() => redirect('/dashboard'), 3000);
   }

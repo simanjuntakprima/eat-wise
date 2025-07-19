@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
 import { toast } from '@/components/ui/use-toast';
 
 export default function GenerateMealButton() {
@@ -10,8 +11,7 @@ export default function GenerateMealButton() {
 
   const handleClick = async () => {
     setLoading(true);
-    const res = await fetch('/api/check-meal-plan');
-    const data = await res.json();
+    await fetch('/api/check-meal-plan');
 
     if (false) {
       toast({

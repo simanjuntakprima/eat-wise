@@ -1,11 +1,11 @@
 'use server';
 
-import prisma from '@/utils/prisma';
 import { getCurrentSession } from '@/services/auth';
-import { redirect } from 'next/dist/server/api-utils';
+import prisma from '@/utils/prisma';
 
 export async function getMealPlanUser() {
   const userSession = await getCurrentSession();
+
   if (!userSession) return null;
   const today = new Date();
 
@@ -44,5 +44,15 @@ export async function getMealPlanUser() {
       status: plans.status,
       dayIndex,
     },
+  };
+}
+
+export async function getMealPlanDetail(mealPlanId) {
+  const mealPlanDetail = await prisma.MealPlanDetail.findFirst({
+    where: { mealPlanId: mealPlanId },
+  });
+
+  return {
+    ...mealPlanDetail,
   };
 }

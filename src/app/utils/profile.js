@@ -1,5 +1,6 @@
-import prisma from '@/utils/prisma';
 import { getCurrentSession } from '@/services/auth';
+import prisma from '@/utils/prisma';
+
 import ProfileComponent from '../(app)/_components/profile-component';
 export default async function ProfilePage() {
   const session = await getCurrentSession();

@@ -1,60 +1,105 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { redirect } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { createMealPlan } from './action';
+
 import BudgetInput from './_components/budgetInput';
-// import { saveMealPlan } from './function';
+import { checkActiveMealPlan, createMealPlan } from './action';
 
 export default function CreateMeal() {
-  const [aiResult, setAiResult] = useState('');
   const [budget, setBudget] = useState(0);
   const [duration, setDuration] = useState('');
   const [meals, setMeals] = useState([]);
   const [type, setType] = useState('');
   const [load, setLoad] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [hasActivePlan, setHasActivePlan] = useState(null); // Initialize as null instead of false
+  const [, setShowActivePlanPopup] = useState(false);
+  const [isCheckingPlan, setIsCheckingPlan] = useState(true); // New loading state
 
   useEffect(() => {
     const valid = budget >= 1000 && duration !== '' && meals.length > 0 && type !== '';
     setIsFormValid(valid);
   }, [budget, duration, meals, type]);
 
+  useEffect(() => {
+    const verifyActivePlan = async () => {
+      try {
+        const activePlan = await checkActiveMealPlan();
+        setHasActivePlan(!!activePlan);
+        setShowActivePlanPopup(!!activePlan);
+      } catch (error) {
+        console.error('Error checking active plan:', error);
+        setHasActivePlan(false);
+      } finally {
+        setIsCheckingPlan(false);
+      }
+    };
+    verifyActivePlan();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoad(true);
-    setAiResult('');
     const formData = new FormData(event.target);
-    
+
     try {
-      const res = await createMealPlan(formData);
-      // if (res?.success) {
-      //   saveMealPlan(res.headerData, res.result);
-      //   setAiResult(res.result);
-      // } else {
-      //   setAiResult('Unsuccessful to create meal plan. Try again!');
-      // }
+      await createMealPlan(formData);
     } catch (error) {
       console.error(error);
-      setAiResult('Error while sending to server');
     } finally {
       setLoad(false);
     }
   };
 
-  // Daftar pilihan untuk checkbox
   const mealOptions = [
     { id: 'breakfast', label: 'Breakfast' },
     { id: 'lunch', label: 'Lunch' },
     { id: 'dinner', label: 'Dinner' },
   ];
 
+  if (isCheckingPlan) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="flex items-end space-x-1">
+          <span className="text-lg font-medium text-[#A4907C]">Loading</span>
+          <span className="flex h-6 items-end space-x-1">
+            <span className="animate-wave block h-1 w-1 bg-[#A4907C]" style={{ animationDelay: '0.1s' }} />
+            <span className="animate-wave block h-2 w-1 bg-[#A4907C]" style={{ animationDelay: '0.2s' }} />
+            <span className="animate-wave block h-3 w-1 bg-[#A4907C]" style={{ animationDelay: '0.3s' }} />
+            <span className="animate-wave block h-2 w-1 bg-[#A4907C]" style={{ animationDelay: '0.4s' }} />
+            <span className="animate-wave block h-1 w-1 bg-[#A4907C]" style={{ animationDelay: '0.5s' }} />
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (hasActivePlan) {
+    return (
+      <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+        <div className="mx-4 max-w-md rounded-lg bg-white p-6">
+          <h3 className="mb-3 text-lg font-bold">You Have an Active Meal Plan</h3>
+          <p className="mb-4">Please complete your current meal plan before creating a new one.</p>
+          <button
+            onClick={() => redirect('/dashboard')}
+            className="w-full rounded-md bg-[#A4907C] py-2 text-white hover:bg-[#8C7A6B]"
+          >
+            Go to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-xl bg-[#CFDCE3] p-6">
       <form onSubmit={handleSubmit} className="mx-auto grid max-w-3xl gap-4">
+        {/* Rest of your form code remains the same */}
         {/* Meal Budget */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-800" htmlFor="budget">

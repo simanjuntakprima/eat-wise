@@ -1,10 +1,11 @@
 import '../globals.css';
 
-import { Avatar } from '@radix-ui/react-avatar';
-import LogoutButton from '../_components/logout-button';
-import { Button } from '@/components/ui/button';
-import { getCurrentSession } from '@/services/auth';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
+
+import { getCurrentSession } from '@/services/auth';
+
+import LogoutButton from '../_components/logout-button';
 import ProfilePage from '../utils/profile';
 
 export const metadata = {
@@ -28,33 +29,33 @@ export default async function RootLayout({ children }) {
           </div>
 
           <div className="cardContent flex flex-col gap-4">
-            <a
+            <Link
               href="/create"
               className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
               Generate Meal Plan
-            </a>
+            </Link>
           </div>
 
           <div className="cardContent flex flex-col gap-4">
-            <a
+            <Link
               href="#"
               className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
               Menu
-            </a>
-            <a
+            </Link>
+            <Link
               href="/history"
               className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
               History
-            </a>
-            <a
+            </Link>
+            <Link
               href="/history"
               className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
             >
               User Account
-            </a>
+            </Link>
           </div>
 
           <div className="cardContent mt-auto">

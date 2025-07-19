@@ -1,4 +1,5 @@
 import { logger, task } from '@trigger.dev/sdk/v3';
+
 import { openai } from '@/utils/openai';
 import prisma from '@/utils/prisma';
 
@@ -19,8 +20,6 @@ export const aiGeneration = task({
       additionalProperties: false,
     };
 
-    // const generatedSchema = generateMealPlanSchema(payload.payloadTask.days.days, mealTimes);
-    // logger.info('Generate schema ', generatedSchema);
     const allMealSchema = Object.fromEntries(mealTimes.map((time) => [time, { ...mealSchema }]));
 
     const prepareSchema = {
@@ -79,7 +78,7 @@ export const aiGeneration = task({
         });
       }
 
-      const mealPlanUpdated = await prisma.mealPlan.update({
+      await prisma.mealPlan.update({
         where: {
           id: mealPlanId,
         },

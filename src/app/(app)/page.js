@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+
 import { getCurrentSession } from '@/services/auth';
 
 export default async function Home() {
@@ -6,8 +7,7 @@ export default async function Home() {
 
   if (userSession) {
     redirect('/dashboard');
-  }else{
+  } else {
     redirect('/login');
   }
-
 }
