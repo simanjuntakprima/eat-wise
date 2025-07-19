@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { regenerateMealPlanUser, getMealPlanData } from './action';
+
 import BudgetInput from '../create/_components/budgetInput';
-import { useSearchParams } from 'next/navigation';
+import { getMealPlanData, regenerateMealPlanUser } from './action';
 
 export default function RegenerateMeal() {
   const searchParams = useSearchParams();
@@ -21,7 +23,6 @@ export default function RegenerateMeal() {
     allergies: '',
   });
 
-  const [aiResult, setAiResult] = useState('');
   const [load, setLoad] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
@@ -100,7 +101,6 @@ export default function RegenerateMeal() {
       return;
     }
     setLoad(true);
-    setAiResult('');
 
     const submitData = new FormData();
     submitData.append('budget', formData.budget.toString());
@@ -112,11 +112,9 @@ export default function RegenerateMeal() {
 
     try {
       console.log('Form data:', submitData);
-      const res = await regenerateMealPlanUser(submitData);
-      // Handle response as needed
+      await regenerateMealPlanUser(submitData);
     } catch (error) {
       console.error(error);
-      setAiResult('Error while sending to server');
     } finally {
       setLoad(false);
     }

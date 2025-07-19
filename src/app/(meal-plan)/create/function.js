@@ -3,7 +3,6 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { openai } from '@/utils/openai';
 import prisma from '@/utils/prisma';
 import { s3Client } from '@/utils/r2';
-import { now } from 'moment';
 
 export default async function ProcessImagesMeals(mealName) {
   console.log(mealName);
@@ -120,36 +119,6 @@ export async function generateRecipe(recipeName, allergies) {
 }
 
 export async function saveMealPlan(headerData, result) {
-  console.log('ini data header ya', headerData);
-
-  // for (let i = 0; i < result.days.length; i++) {
-  //   const day = result.days[i];
-
-  //   const details = Object.entries(day).map(([mealType, menu]) => ({
-  //     mealType,
-  //     menu,
-  //   }));
-
-  //   await prisma.mealPlan.create({
-  //     data: {
-  //       title: `Meal Plan Day ${i + 1}`,
-  //       days: i+1,
-  //       budget: result.budget,
-  //       duration: result.duration,
-  //       allergies: result.allergies,
-  //       cuisineCategories: result.cuisineCategories,
-  //       mealPlanDetails: {
-  //         create: [
-  //           { mealType: 'breakfast', menu: day?.breakfast },
-  //           { mealType: 'lunch', menu: day?.lunch },
-  //           { mealType: 'dinner', menu: day?.dinner },
-  //         ]
-  //       },
-  //       user: 'cmcxgawpt0006hbilissxxk9r',
-  //     }
-  //   });
-  // }
-
   for (let i = 0; i < result.days.length; i++) {
     const day = result.days[i];
 

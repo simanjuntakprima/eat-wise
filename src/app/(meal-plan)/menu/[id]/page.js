@@ -1,8 +1,9 @@
-import FoodModal from "../foodModal";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getMealPlanHistoryDetail } from "./action";
-import { prepareMealJson } from "@/app/utils/prepareMealJson";
 import ExportMealPlanPDFButton from "@/app/_components/pdf/ExportMealPlanPDFButton";
+import { prepareMealJson } from "@/app/utils/prepareMealJson";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import FoodModal from "../foodModal";
+import { getMealPlanHistoryDetail } from "./action";
 
 export default async function HistMenuDetail({ params: { id } }) {
   const itemsMenu = await getMealPlanHistoryDetail(id); 

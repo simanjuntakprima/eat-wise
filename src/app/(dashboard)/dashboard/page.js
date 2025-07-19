@@ -1,4 +1,5 @@
 import DashboardEmpty from '@/app/(app)/_components/emptyMealPlan';
+
 import { getMealPlanUser } from './action';
 import DashboardClient from './DashboardClient';
 export default async function Dashboard() {

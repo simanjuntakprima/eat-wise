@@ -3,10 +3,9 @@
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from '@/components/ui/dialog';
 
 export default function FoodModal({ mealType, mealData, isOpen, onClose }) {
