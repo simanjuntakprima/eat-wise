@@ -34,7 +34,7 @@ export async function loginAction(_, formData) {
   cookieStore.set('session', session.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 5,
+    maxAge: 60 * 60,
     path: '/',
   });
   redirect('/dashboard');
@@ -63,7 +63,7 @@ export async function registerAction(_, formData) {
   cookieStore.set('session', session.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 5,
+    maxAge: 60 * 60,
     path: '/',
   });
   return { success: 'User created successfully', user: newUser };
