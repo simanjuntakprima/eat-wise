@@ -69,3 +69,32 @@ export async function getMealPlanById(mealPlanId) {
   });
   return { ...mealPlan, budget: mealPlan.budget?.toNumber?.() || Number(mealPlan.budget) || 0 };
 }
+
+export async function checkActiveMealPlan() {
+  try {
+    const userSession = await getCurrentSession();
+    const userId = userSession.userId;
+    const today = new Date();
+
+    if (!userSession) redirect('/');
+
+    const plans = await prisma.mealPlan.findFirst({
+      where: { userId: userSession.userId, status: 'completed' },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!plans) {
+      return null;
+    }
+
+    if (plans.endDate < today) {
+      return null;
+    }
+    return { ...plans, budget: plans.budget?.toNumber?.() || Number(plans.budget) || 0 };
+  } catch (error) {
+    console.error('Error checking active meal plan:', error);
+    return null;
+  }
+}
