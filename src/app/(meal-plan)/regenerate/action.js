@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { sanitizeCurrency, getRangeMealPlan } from '../create/function';
 import { aiGeneration } from '@/trigger/tasks';
 import prisma from '@/utils/prisma';
+import { Prisma } from '@prisma/client';
 import { getCurrentSession } from '@/services/auth';
 import { redirect } from 'next/navigation';
 
@@ -66,15 +67,37 @@ ${allergies ? `Allergies: ${allergies}\n` : ''}Type of cuisine: ${type}`;
   redirect('/dashboard');
 }
 
-export async function getMealPlanById(mealPlanId, userId) {
+export async function getMealPlanData(mealPlanId) {
   try {
-    const mealPlan = await prisma.mealPlan.findFirst({
-      where: { id: mealPlanId, userId: userId },
-    });
-    return mealPlan;
+    const [mealPlan, mealPlanDetail] = await prisma.$transaction([
+      prisma.mealPlan.findFirst({
+        where: { id: mealPlanId },
+      }),
+      prisma.mealPlanDetail.findFirst({
+        where: { mealPlanId, day: 1 },
+      }),
+    ]);
+
+    if (!mealPlan) {
+      throw new Error('Meal plan not found');
+    }
+
+    return {
+      // Plan data
+      ...mealPlan,
+      budget: mealPlan.budget?.toNumber?.() || Number(mealPlan.budget) || 0,
+
+      // Day 1 meal data
+      ...(mealPlanDetail || {}),
+
+      // Ensure these fields are included even if null
+      cuisineCategories: mealPlan.cuisineCategories,
+      allergies: mealPlan.allergies,
+      days: mealPlan.days,
+    };
   } catch (error) {
     console.error('Error fetching meal plan:', error);
-    return null;
+    throw error;
   }
 }
 
@@ -89,3 +112,4 @@ export async function deleteExistingMealPlan(mealPlanId, userId) {
     return { success: false, error: 'Failed to delete meal plan' };
   }
 }
+

@@ -1,8 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function BudgetInput({ onBudgetChange }) {
+export default function BudgetInput({ initialValue = 0, onBudgetChange }) {
   const [formattedBudget, setFormattedBudget] = useState('');
-  const [rawBudget, setRawBudget] = useState(0);
+  const [rawBudget, setRawBudget] = useState(initialValue);
+
+  // Add this effect to handle initial value
+  useEffect(() => {
+    if (initialValue !== undefined && initialValue !== null) {
+      const formatted = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+      }).format(initialValue);
+
+      setFormattedBudget(formatted);
+      setRawBudget(initialValue);
+    }
+  }, [initialValue]);
 
   const handleBudgetChange = (e) => {
     const rawValue = e.target.value.replace(/\D/g, '');

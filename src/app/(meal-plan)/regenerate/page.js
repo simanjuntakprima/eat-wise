@@ -4,23 +4,50 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { regenerateMealPlanUser, getMealPlanById } from './action';
+import { regenerateMealPlanUser, getMealPlanData } from './action';
 import BudgetInput from '../create/_components/budgetInput';
 import { useSearchParams } from 'next/navigation';
 
 export default function RegenerateMeal() {
   const searchParams = useSearchParams();
   const mealPlanId = searchParams.get('mealPlanId');
+  const [initialFormData, setInitialFormData] = useState(null);
+  const [showUnchangedWarning, setShowUnchangedWarning] = useState(false);
+  const [formData, setFormData] = useState({
+    budget: 0,
+    duration: '',
+    meals: [],
+    type: '',
+    allergies: '',
+  });
 
   const [aiResult, setAiResult] = useState('');
-  const [budget, setBudget] = useState(0);
-  const [duration, setDuration] = useState('');
-  const [meals, setMeals] = useState([]);
-  const [type, setType] = useState('');
   const [load, setLoad] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [isLoadingData, setIsLoadingData] = useState(true); // New loading state
-  const [allergies, setAllergies] = useState(''); // Added allergies state
+  const [isLoadingData, setIsLoadingData] = useState(true);
+
+  const hasFormChanged = () => {
+    if (!initialFormData) return true; // Allow submit if no initial data loaded
+
+    return (
+      formData.budget !== initialFormData.budget ||
+      formData.duration !== initialFormData.duration ||
+      !arraysEqual(formData.meals, initialFormData.meals) ||
+      formData.type !== initialFormData.type ||
+      formData.allergies !== initialFormData.allergies
+    );
+  };
+
+  const arraysEqual = (a, b) => {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    const sortedA = [...a].sort();
+    const sortedB = [...b].sort();
+
+    return sortedA.every((val, index) => val === sortedB[index]);
+  };
 
   // Fetch existing meal plan data
   useEffect(() => {
@@ -29,17 +56,27 @@ export default function RegenerateMeal() {
 
       try {
         setIsLoadingData(true);
-        const existingMealPlan = await getMealPlanById(mealPlanId);
+        const response = await getMealPlanData(mealPlanId);
+        console.log('API Response:', response);
 
-        if (existingMealPlan) {
-          setBudget(existingMealPlan.budget || 0);
-          setDuration(existingMealPlan.duration?.toString() || '');
-          setMeals(existingMealPlan.meals || []);
-          setType(existingMealPlan.type || '');
-          setAllergies(existingMealPlan.allergies || '');
+        if (response) {
+          const initialData = {
+            budget: response.budget || 0,
+            duration: response.days?.toString() || '',
+            meals: [
+              ...(response.breakfast ? ['breakfast'] : []),
+              ...(response.lunch ? ['lunch'] : []),
+              ...(response.dinner ? ['dinner'] : []),
+            ],
+            type: response.cuisineCategories || '',
+            allergies: response.allergies || '',
+          };
+
+          setFormData(initialData);
+          setInitialFormData(initialData); // This was missing
         }
       } catch (error) {
-        console.error('Failed to fetch meal plan:', error);
+        console.error('Fetch error:', error);
       } finally {
         setIsLoadingData(false);
       }
@@ -48,28 +85,35 @@ export default function RegenerateMeal() {
     fetchMealPlanData();
   }, [mealPlanId]);
 
+  // Form validation
   useEffect(() => {
-    const valid = budget >= 1000 && duration !== '' && meals.length > 0 && type !== '';
+    const valid =
+      formData.budget >= 1000 && formData.duration !== '' && formData.meals.length > 0 && formData.type !== '';
     setIsFormValid(valid);
-  }, [budget, duration, meals, type]);
+  }, [formData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!hasFormChanged()) {
+      setShowUnchangedWarning(true);
+      return;
+    }
     setLoad(true);
     setAiResult('');
 
-    const formData = new FormData();
-    formData.append('budget', budget.toString());
-    formData.append('days', duration);
-    formData.append('type', type);
-    formData.append('allergies', allergies);
-    formData.append('existingMealPlanId', mealPlanId);
-    meals.forEach((meal) => formData.append('mealTimes', meal));
+    const submitData = new FormData();
+    submitData.append('budget', formData.budget.toString());
+    submitData.append('days', formData.duration);
+    submitData.append('type', formData.type);
+    submitData.append('allergies', formData.allergies);
+    submitData.append('existingMealPlanId', mealPlanId);
+    formData.meals.forEach((meal) => submitData.append('mealTimes', meal));
 
     try {
-      console.log('isi form', formData);
-      const res = await regenerateMealPlanUser(formData);
-      // Handle response as before
+      console.log('Form data:', submitData);
+      const res = await regenerateMealPlanUser(submitData);
+      // Handle response as needed
     } catch (error) {
       console.error(error);
       setAiResult('Error while sending to server');
@@ -100,7 +144,10 @@ export default function RegenerateMeal() {
           <label className="text-sm font-medium text-gray-800" htmlFor="budget">
             Meal Budget
           </label>
-          <BudgetInput onBudgetChange={(val) => setBudget(val)} initialValue={budget} />
+          <BudgetInput
+            initialValue={formData.budget}
+            onBudgetChange={(val) => setFormData((prev) => ({ ...prev, budget: val }))}
+          />
         </div>
 
         {/* Duration */}
@@ -118,8 +165,8 @@ export default function RegenerateMeal() {
                     name="days"
                     type="radio"
                     value={value}
-                    checked={duration === value}
-                    onChange={(e) => setDuration(e.target.value)}
+                    checked={formData.duration === value}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, duration: e.target.value }))}
                     className="h-4 w-4 border-gray-300 text-[#A4907C] focus:ring-[#8C7A6B]"
                   />
                   <label htmlFor={`days-${value}`} className="text-sm font-normal text-gray-700">
@@ -142,17 +189,16 @@ export default function RegenerateMeal() {
                   name="mealTimes"
                   type="checkbox"
                   value={meal.id}
-                  checked={meals.includes(meal.id)}
+                  checked={formData.meals.includes(meal.id)}
                   onChange={(e) => {
                     const checked = e.target.checked;
-                    const value = e.target.value;
-                    setMeals((prev) => (checked ? [...prev, value] : prev.filter((item) => item !== value)));
+                    setFormData((prev) => ({
+                      ...prev,
+                      meals: checked ? [...prev.meals, meal.id] : prev.meals.filter((item) => item !== meal.id),
+                    }));
                   }}
-                  className="h-4 w-4 rounded border-gray-300 text-[#A4907C] focus:ring-[#8C7A6B]"
                 />
-                <label htmlFor={meal.id} className="text-sm font-normal text-gray-700">
-                  {meal.label}
-                </label>
+                <label htmlFor={meal.id}>{meal.label}</label>
               </div>
             ))}
           </div>
@@ -166,8 +212,8 @@ export default function RegenerateMeal() {
           <Textarea
             id="allergies"
             name="allergies"
-            value={allergies}
-            onChange={(e) => setAllergies(e.target.value)}
+            value={formData.allergies}
+            onChange={(e) => setFormData((prev) => ({ ...prev, allergies: e.target.value }))}
             placeholder="i.e: kacang, susu"
             className="bg-[#f1f0eb] placeholder:text-gray-500"
           />
@@ -178,7 +224,7 @@ export default function RegenerateMeal() {
           <label className="text-sm font-medium text-gray-800" htmlFor="type">
             Food Preferences
           </label>
-          <Select value={type} onValueChange={(value) => setType(value)}>
+          <Select value={formData.type} onValueChange={(value) => setFormData((prev) => ({ ...prev, type: value }))}>
             <SelectTrigger id="type" className="bg-[#F2EAD3]">
               <SelectValue placeholder="Preferences" />
             </SelectTrigger>
@@ -192,7 +238,6 @@ export default function RegenerateMeal() {
               <SelectItem value="Cina">Cina</SelectItem>
             </SelectContent>
           </Select>
-          <input type="hidden" name="type" value={type} />
         </div>
 
         {/* Submit Button */}
@@ -206,6 +251,21 @@ export default function RegenerateMeal() {
           </Button>
         </div>
       </form>
+      {/* Move outside the form or at least outside the submit button div */}
+      {showUnchangedWarning && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[1px]">
+          <div className="mx-4 max-w-md rounded-lg border border-gray-100 bg-white/95 p-6 shadow-xl">
+            <h3 className="mb-3 text-lg font-bold">No Changes Made</h3>
+            <p className="mb-4 text-gray-600">Please update at least one field before submitting.</p>
+            <button
+              onClick={() => setShowUnchangedWarning(false)}
+              className="w-full rounded-md bg-[#A4907C] py-2 text-white hover:bg-[#8C7A6B]"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

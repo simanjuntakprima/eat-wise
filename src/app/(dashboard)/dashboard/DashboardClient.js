@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { getMealImage } from '@/app/utils/prepareMealJson';
 import FoodModal from '@/app/(app)/_components/foodModal';
 import { RegenerateButton } from '@/app/(app)/_components/RegenerateButton';
-import { getMealPlanById } from '@/app/(meal-plan)/regenerate/action';
+import { getMealPlanById } from '@/app/(meal-plan)/create/action';
 import { getMealPlanDetail } from './action';
 export default function DashboardClient({ initialMealData, initialPlan }) {
   const [openModal, setOpenModal] = useState({

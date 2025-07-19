@@ -61,3 +61,11 @@ ${allergies ? `Allergies: ${allergies}\n` : ''}Type of cuisine: ${type}`;
   await aiGeneration.trigger({ payloadTask });
   redirect('/dashboard');
 }
+
+export async function getMealPlanById(mealPlanId) {
+  const userSession = await getCurrentSession();
+  const mealPlan = await prisma.mealPlan.findUnique({
+    where: { id: mealPlanId, userId: userSession.userId },
+  });
+  return { ...mealPlan, budget: mealPlan.budget?.toNumber?.() || Number(mealPlan.budget) || 0 };
+}
