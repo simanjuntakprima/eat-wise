@@ -15,16 +15,16 @@ export default function FoodModal({ mealType, mealData, isOpen, onClose }) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="capitalize">{mealType}</DialogTitle>
-          <DialogDescription>{mealData.dishName}</DialogDescription>
+          <DialogDescription>{mealData?.dishName}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
-            {mealData.ingredients && (
+            {mealData?.ingredients && (
               <p className="text-sm">
                 <span className="font-medium">Ingredients:</span> {mealData.ingredients}
               </p>
             )}
-            {mealData.instructions && (
+            {mealData?.instructions && (
               <p className="text-sm">
                 <span className="font-medium">Instructions:</span> {mealData.instructions}
               </p>

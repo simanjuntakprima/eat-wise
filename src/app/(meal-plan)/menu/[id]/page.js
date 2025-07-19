@@ -35,41 +35,45 @@ export default async function HistMenuDetail({ params: { id } }) {
   const defaultValue = dayData[0]?.value ?? "day-1";
 
   return (
-    <div className="p-6 w-full max-w-xl" >
-      <Tabs defaultValue={defaultValue} className="w-full max-w-xl">
-        <TabsList className="w-full p-0 bg-[#dfd5c0] justify-start border-b rounded-none">          
+    <div className="m-auto flex w-full items-start justify-center rounded-2xl bg-[#ffffff] p-24">
+      <div className="w-full max-w-6xl rounded-xl bg-[#ffffff] p-8">
+        <Tabs defaultValue={defaultValue} className="w-full">
+          <TabsList className="no-scrollbar flex w-full gap-2 overflow-x-auto bg-[#DED2B3] p-0">
+            {dayData.map((d) => (
+              <TabsTrigger
+                key={d.value}
+                value={d.value}
+                className="min-w-[80px] flex-1 border-b-2 border-[#DED2B3] px-4 py-2 text-sm font-bold text-gray-600 data-[state=active]:border-[#494236] data-[state=active]:text-zinc-950"
+              >
+                {d.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+
           {dayData.map((d) => (
-            <TabsTrigger 
-              key={d.value} value={d.value}
-              className="rounded-none bg-background h-full data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-primary">
-              {d.label}
-            </TabsTrigger>
+            <TabsContent key={d.value} value={d.value} className="mt-6">
+              <div className="mb-6 grid grid-cols-3 gap-4 text-center">
+                {d.cards.map((c) => (
+                  <p key={c.label} className="font-semibold text-gray-600">
+                    {c.label}
+                  </p>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                {d.cards.map((c) => (
+                  <div
+                    key={c.label}
+                    className="flex flex-col items-center justify-center rounded-lg bg-[#DED2B3] p-6 transition-all hover:shadow-md"
+                  >
+                    <FoodModal foods={[c.food]} />
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
           ))}
-        </TabsList>
-
-        {dayData.map((d) => (
-          <TabsContent key={d.value} value={d.value}>
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 text-center font-semibold text-gray-500 mb-4">
-              {d.cards.map((c) => (
-                <p key={c.label}>{c.label}</p>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 justify-items-center w-full">
-              {d.cards.map((c) => (
-                <div
-                  key={c.label}
-                  className="flex flex-col items-center justify-center bg-yellow-100 rounded-lg p-4 w-64 h-40 shadow"
-                >
-                  <FoodModal foods={[c.food]} />
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-        ))}
-
-
-      </Tabs>
+        </Tabs>
+      </div>
     </div>
   );
 }
