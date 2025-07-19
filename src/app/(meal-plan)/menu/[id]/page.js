@@ -2,6 +2,7 @@ import FoodModal from "../foodModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getMealPlanHistoryDetail } from "./action";
 import { prepareMealJson } from "@/app/utils/prepareMealJson";
+import ExportMealPlanPDFButton from "@/app/_components/pdf/ExportMealPlanPDFButton";
 
 export default async function HistMenuDetail({ params: { id } }) {
   const itemsMenu = await getMealPlanHistoryDetail(id); 
@@ -67,9 +68,10 @@ export default async function HistMenuDetail({ params: { id } }) {
             </div>
           </TabsContent>
         ))}
-
-
       </Tabs>
+        <div className="mt-10 w-full flex justify-end">
+          <ExportMealPlanPDFButton itemsMenu={itemsMenu}/>
+        </div>
     </div>
   );
 }
