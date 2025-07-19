@@ -5,8 +5,7 @@ import { redirect } from 'next/navigation';
 
 import { getCurrentSession } from '@/services/auth';
 
-import LogoutButton from '../_components/logout-button';
-import ProfilePage from '../utils/profile';
+import Sidebar from '@/app/common/sidebar';
 
 export const metadata = {
   title: 'EatWise',
@@ -20,48 +19,18 @@ export default async function RootLayout({ children }) {
     redirect('/login');
   }
 
+  const additionalLinks = [
+    {
+      href: '/account',
+      label: 'User Account',
+    },
+  ];
+
   return (
     <html lang="en">
       <body className="flex h-screen">
-        <aside className="flex w-64 flex-col items-center gap-4 rounded-lg bg-gradient-to-b from-[#FAF8F4]/90 to-[#C7B590]/90 p-4 text-[#1C1C1C] shadow-xl backdrop-blur-sm">
-          <div className="cardContent flex flex-col items-center">
-            <ProfilePage></ProfilePage>
-          </div>
 
-          <div className="cardContent flex flex-col gap-4">
-            <Link
-              href="/create"
-              className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
-            >
-              Generate Meal Plan
-            </Link>
-          </div>
-
-          <div className="cardContent flex flex-col gap-4">
-            <Link
-              href="#"
-              className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
-            >
-              Menu
-            </Link>
-            <Link
-              href="/history"
-              className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
-            >
-              History
-            </Link>
-            <Link
-              href="/history"
-              className="rounded-md bg-[#DED2B3] px-5 py-2 text-center text-sm font-semibold text-[#1C1C1C] shadow-md transition duration-300 hover:bg-[#bda16d] active:scale-[0.98]"
-            >
-              User Account
-            </Link>
-          </div>
-
-          <div className="cardContent mt-auto">
-            <LogoutButton></LogoutButton>
-          </div>
-        </aside>
+        <Sidebar additionalLinks={additionalLinks} />
 
         <div className="relative flex-1 bg-white p-8">
           <div className="absolute top-4 right-6">

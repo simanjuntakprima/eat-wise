@@ -1,17 +1,18 @@
-import ExportMealPlanPDFButton from "@/app/_components/pdf/ExportMealPlanPDFButton";
-import { prepareMealJson } from "@/app/utils/prepareMealJson";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ExportMealPlanPDFButton from '@/app/_components/pdf/ExportMealPlanPDFButton';
+import { prepareMealJson } from '@/app/utils/prepareMealJson';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import FoodModal from "../foodModal";
-import { getMealPlanHistoryDetail } from "./action";
+import FoodModal from '../foodModal';
+import { getMealPlanHistoryDetail } from './action';
 
-export default async function HistMenuDetail({ params: { id } }) {
-  const itemsMenu = await getMealPlanHistoryDetail(id); 
+export default async function HistMenuDetail({ params }) {
+  const { id } = await params;
+  const itemsMenu = await getMealPlanHistoryDetail(id);
 
   if (!itemsMenu?.length) {
     return (
       <div className="p-6">
-        <p className="text-sm text-muted-foreground">No meal details found.</p>
+        <p className="text-muted-foreground text-sm">No meal details found.</p>
       </div>
     );
   }
@@ -22,10 +23,10 @@ export default async function HistMenuDetail({ params: { id } }) {
     const dinner = prepareMealJson(d.dinner);
 
     const cards = [
-      { label: "Breakfast", food: breakfast },
-      { label: "Lunch", food: lunch },
-      { label: "Dinner", food: dinner },
-    ].filter((c) => c.food); 
+      { label: 'Breakfast', food: breakfast },
+      { label: 'Lunch', food: lunch },
+      { label: 'Dinner', food: dinner },
+    ].filter((c) => c.food);
 
     return {
       value: `day-${d.day}`,
@@ -34,45 +35,37 @@ export default async function HistMenuDetail({ params: { id } }) {
     };
   });
 
-  const defaultValue = dayData[0]?.value ?? "day-1";
+  const defaultValue = dayData[0]?.value ?? 'day-1';
 
   return (
-    <div className="p-6 w-full max-w-xl" >
-      <Tabs defaultValue={defaultValue} className="w-full max-w-xl">
-        <TabsList className="w-full p-0 bg-[#dfd5c0] justify-start border-b rounded-none">          
+    <div className="w-full p-6">
+      <Tabs defaultValue={defaultValue} className="w-full">
+        <TabsList className="w-full justify-start rounded-none border-b bg-[#dfd5c0] p-0">
           {dayData.map((d) => (
-            <TabsTrigger 
-              key={d.value} value={d.value}
-              className="rounded-none bg-background h-full data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-primary">
+            <TabsTrigger
+              key={d.value}
+              value={d.value}
+              className="bg-background data-[state=active]:border-primary h-full rounded-none border-b-2 border-transparent data-[state=active]:shadow-none"
+            >
               {d.label}
             </TabsTrigger>
           ))}
         </TabsList>
 
         {dayData.map((d) => (
-          <TabsContent key={d.value} value={d.value}>
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 text-center font-semibold text-gray-500 mb-4">
-              {d.cards.map((c) => (
-                <p key={c.label}>{c.label}</p>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 justify-items-center w-full">
-              {d.cards.map((c) => (
-                <div
-                  key={c.label}
-                  className="flex flex-col items-center justify-center bg-yellow-100 rounded-lg p-4 w-64 h-40 shadow"
-                >
-                  <FoodModal foods={[c.food]} />
-                </div>
-              ))}
-            </div>
+          <TabsContent key={d.value} value={d.value} className="grid grid-cols-3 gap-4">
+            {d.cards.map((c) => (
+              <div key={c.label} className="flex flex-col">
+                <p className="mt-4 mb-4 font-semibold text-gray-500 text-center">{c.label}</p>
+                <FoodModal foods={[c.food]} />
+              </div>
+            ))}
           </TabsContent>
         ))}
       </Tabs>
-        <div className="mt-10 w-full flex justify-end">
-          <ExportMealPlanPDFButton itemsMenu={itemsMenu}/>
-        </div>
+      <div className="mt-10 flex w-full justify-end">
+        <ExportMealPlanPDFButton itemsMenu={itemsMenu} />
+      </div>
     </div>
   );
 }

@@ -8,6 +8,27 @@ import { getMealPlanById } from '@/app/(meal-plan)/create/action';
 import { getMealImage } from '@/app/utils/prepareMealJson';
 
 import { getMealPlanDetail } from './action';
+
+function renderMealSection(mealType, mealData, setOpenModal) {
+  if (!mealData?.[mealType]?.dishName) {
+    return null; // Skip rendering if no dish is selected
+  }
+
+  return (
+    <section
+      key={mealType}
+      onClick={() => setOpenModal((prev) => ({ ...prev, [mealType]: true }))}
+      className="cursor-pointer items-stretch transition-opacity hover:opacity-80"
+    >
+      <h1 className="text-lg font-semibold capitalize">{mealType}</h1>
+      <figure>
+        {getMealImage(mealType)}
+        <figcaption className="mt-2 font-medium">{mealData?.[mealType]?.dishName || 'No dish selected'}</figcaption>
+      </figure>
+    </section>
+  );
+}
+
 export default function DashboardClient({ initialMealData, initialPlan }) {
   const [openModal, setOpenModal] = useState({
     breakfast: false,
@@ -67,11 +88,12 @@ export default function DashboardClient({ initialMealData, initialPlan }) {
   }, [plan.status]);
 
   return (
-    <div className="px-4 py-10">
-      <h1 className="text-xl font-semibold">{plan.title}</h1>
-      <p>
+    <div>
+      <h1 className="text-3xl">{plan.title}</h1>
+
+      <h4 className="mb-3">
         Day {plan.dayIndex} of {plan.days}
-      </p>
+      </h4>
 
       {isLoading ? (
         <div className="mt-8">
@@ -83,66 +105,10 @@ export default function DashboardClient({ initialMealData, initialPlan }) {
           </div>
         </div>
       ) : (
-        <>
-          <div className="mt-8 flex justify-between">
-            {mealData?.breakfast?.dishName && (
-              <section
-                onClick={() => setOpenModal({ ...openModal, breakfast: true })}
-                className="cursor-pointer transition-opacity hover:opacity-80"
-              >
-                <label className="block text-sm font-medium text-gray-700">Breakfast</label>
-                {getMealImage('breakfast')}
-                <h2 className="mt-2 font-medium">{mealData.breakfast.dishName}</h2>
-              </section>
-            )}
-
-            {mealData?.lunch?.dishName && (
-              <section
-                onClick={() => setOpenModal({ ...openModal, lunch: true })}
-                className="cursor-pointer transition-opacity hover:opacity-80"
-              >
-                <label className="block text-sm font-medium text-gray-700">Lunch</label>
-                {getMealImage('lunch')}
-                <h2 className="mt-2 font-medium">{mealData.lunch.dishName}</h2>
-              </section>
-            )}
-
-            {mealData?.dinner?.dishName && (
-              <section
-                onClick={() => setOpenModal({ ...openModal, dinner: true })}
-                className="cursor-pointer transition-opacity hover:opacity-80"
-              >
-                <label className="block text-sm font-medium text-gray-700">Dinner</label>
-                {getMealImage('dinner')}
-                <h2 className="mt-2 font-medium">{mealData.dinner.dishName}</h2>
-              </section>
-            )}
+        <div>
+          <div className="flex items-stretch justify-between gap-4">
+            {mealTypes.map((mealType) => renderMealSection(mealType, mealData, setOpenModal))}
           </div>
-
-          {/* <FoodModal
-            mealType="breakfast"
-            mealData={mealData.breakfast}
-            isOpen={openModal.breakfast}
-            onClose={() => setOpenModal({ ...openModal, breakfast: false })}
-            getMealImage={getMealImage}
-          />
-
-          <FoodModal
-            mealType="lunch"
-            mealData={mealData.lunch}
-            isOpen={openModal.lunch}
-            onClose={() => setOpenModal({ ...openModal, lunch: false })}
-            getMealImage={getMealImage}
-          />
-
-          <FoodModal
-            mealType="dinner"
-            mealData={mealData.dinner}
-            isOpen={openModal.dinner}
-            onClose={() => setOpenModal({ ...openModal, dinner: false })}
-            getMealImage={getMealImage}
-          />
-           */}
 
           {mealTypes.map(
             (mealType) =>
@@ -166,7 +132,7 @@ export default function DashboardClient({ initialMealData, initialPlan }) {
               isLoading={isLoading}
             />
           </div>
-        </>
+        </div>
       )}
     </div>
   );

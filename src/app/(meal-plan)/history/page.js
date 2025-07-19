@@ -43,18 +43,14 @@ export default async function HistoryPage({ searchParams = {} }) {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {mealPlanHist.map((plan) => (
-          <Card key={plan.id} className="border-none bg-[#F2EAD3] hover:shadow-lg">
-            <CardContent className="p-4">
-              <Button asChild variant="ghost" className="h-full w-full text-center">
-                <Link href={`menu/${plan.id}`}>
-                  <div className="flex flex-col">
-                    <span>Meal plan</span>
-                    <span>{formatDate(plan.createdAt)}</span>
-                  </div>
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <Button asChild variant="ghost" className="h-full w-full bg-[#F2EAD3] p-4 text-center">
+            <Link href={`menu/${plan.id}`}>
+              <div className="flex flex-col">
+                <span>Meal plan</span>
+                <span>{formatDate(plan.createdAt)}</span>
+              </div>
+            </Link>
+          </Button>
         ))}
       </div>
 
