@@ -1,7 +1,6 @@
 import { logger, task } from '@trigger.dev/sdk/v3';
 
 import { openai } from '@/utils/openai';
-import prisma from '@/utils/prisma';
 
 export const aiGeneration = task({
   id: 'ai-generation',
@@ -46,8 +45,8 @@ export const aiGeneration = task({
 
     const inputInstruction = payload.payloadTask.instruction;
     const result = await openai.responses.parse({
-      model: 'gpt-4o',
-      instructions: `You are a smart meal planning assistant designed for users who want to eat healthy, save time, and stay within their budget. Suggest weekly meal plans based on the user's dietary preferences, calorie goals, cooking time availability, and budget constraints. Please provide only the cuisine title in short also please be mind these rules and if its not parsing allergies data
+      model: 'gpt-4.1',
+      instructions: `You are a smart meal planning assistant designed for users who want to eat healthy, save time, and stay within their budget. Suggest weekly meal plans based on the user's dietary preferences, calorie goals, cooking time availability, and budget constraints and give variety type of food in each day. Please provide only the cuisine title in short also please be mind these rules and if its not parsing allergies data also 
       it means that user have no allergies, please mind of that rule 
       - Ingredients must be listed as a numbered list.
       - Instructions must be listed as a numbered cooking guide.
@@ -61,35 +60,33 @@ export const aiGeneration = task({
     logger.info('result meal plan', result.output_parsed);
     logger.info('result meal plan length arr', result.output_parsed.days.length);
     const mealPlanId = payload.payloadTask.mealPlanId;
+    const days = result.output_parsed.days;
+
+    const createMealPlanDetailPayload = {
+      mealPlanId,
+      days,
+    };
+    logger.info('task payload', createMealPlanDetailPayload);
+
     try {
-      for (let i = 0; i < result.output_parsed.days.length; i++) {
-        const day = result.output_parsed.days[i];
-        logger.info('breakfast', day.breakfast);
-        logger.info('lunch', day.lunch);
-        logger.info('dinner', day.dinner);
-        await prisma.mealPlanDetail.create({
-          data: {
-            mealPlanId,
-            day: i + 1,
-            breakfast: day.breakfast ?? null,
-            lunch: day.lunch ?? null,
-            dinner: day.dinner ?? null,
-          },
-        });
+      const response = await fetch(`${process.env.API_BASE_URL}/api/create-meal-plan-detail`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(createMealPlanDetailPayload),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        logger.error('Failed to create meal plan detail', response.error);
+        return;
       }
 
-      await prisma.mealPlan.update({
-        where: {
-          id: mealPlanId,
-        },
-        data: {
-          status: 'completed',
-        },
-      });
-      return { status: 'completed' };
+      logger.info('Meal plan detail created successfully', data);
     } catch (error) {
-      logger.error('Error inserting to db plan detail');
-      throw error;
+      logger.error('Error creating meal plan detail', error);
     }
   },
 });
