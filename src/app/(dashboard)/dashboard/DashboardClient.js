@@ -1,9 +1,12 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { getMealImage } from '@/app/utils/prepareMealJson';
+import React from 'react';
+import { useEffect, useState } from 'react';
+
 import FoodModal from '@/app/(app)/_components/foodModal';
 import { RegenerateButton } from '@/app/(app)/_components/RegenerateButton';
 import { getMealPlanById } from '@/app/(meal-plan)/create/action';
+import { getMealImage } from '@/app/utils/prepareMealJson';
+
 import { getMealPlanDetail } from './action';
 export default function DashboardClient({ initialMealData, initialPlan }) {
   const [openModal, setOpenModal] = useState({
@@ -52,9 +55,7 @@ export default function DashboardClient({ initialMealData, initialPlan }) {
     try {
       setIsLoading(true);
       console.log('Regenerating meal plan:', mealPlanId);
-      // Add your regeneration logic here
       await regenerateMealPlan(mealPlanId);
-      //After successful regeneration:
     } catch (error) {
       console.error('Regeneration failed:', error);
       setIsLoading(false);

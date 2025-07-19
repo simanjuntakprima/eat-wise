@@ -1,6 +1,8 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -10,9 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useRouter } from 'next/navigation';
 
-export function RegenerateButton({ mealPlanId, onDelete }) {
+export function RegenerateButton({ mealPlanId }) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   console.log('want to regenerate ', mealPlanId);

@@ -1,10 +1,12 @@
 'use server';
 import { format } from 'date-fns';
-import { sanitizeCurrency, getRangeMealPlan } from './function';
+import { redirect } from 'next/navigation';
+
+import { getCurrentSession } from '@/services/auth';
 import { aiGeneration } from '@/trigger/tasks';
 import prisma from '@/utils/prisma';
-import { getCurrentSession } from '@/services/auth';
-import { redirect } from 'next/navigation';
+
+import { getRangeMealPlan, sanitizeCurrency } from './function';
 
 export async function createMealPlan(formData) {
   const userSession = await getCurrentSession();
@@ -73,7 +75,6 @@ export async function getMealPlanById(mealPlanId) {
 export async function checkActiveMealPlan() {
   try {
     const userSession = await getCurrentSession();
-    const userId = userSession.userId;
     const today = new Date();
 
     if (!userSession) redirect('/');

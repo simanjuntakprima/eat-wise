@@ -1,7 +1,7 @@
 'use server';
 
-import prisma from '@/utils/prisma';
 import { getCurrentSession } from '@/services/auth';
+import prisma from '@/utils/prisma';
 
 export async function getMealPlanUser() {
   const userSession = await getCurrentSession();

@@ -1,11 +1,12 @@
 'use server';
 import { format } from 'date-fns';
-import { sanitizeCurrency, getRangeMealPlan } from '../create/function';
+import { redirect } from 'next/navigation';
+
+import { getCurrentSession } from '@/services/auth';
 import { aiGeneration } from '@/trigger/tasks';
 import prisma from '@/utils/prisma';
-import { Prisma } from '@prisma/client';
-import { getCurrentSession } from '@/services/auth';
-import { redirect } from 'next/navigation';
+
+import { getRangeMealPlan, sanitizeCurrency } from '../create/function';
 
 export async function regenerateMealPlanUser(formData) {
   const userSession = await getCurrentSession();
@@ -103,7 +104,7 @@ export async function getMealPlanData(mealPlanId) {
 
 export async function deleteExistingMealPlan(mealPlanId, userId) {
   try {
-    const mealPlan = await prisma.mealPlan.delete({
+    await prisma.mealPlan.delete({
       where: { id: mealPlanId, userId: userId },
     });
     return { success: true };
@@ -112,4 +113,3 @@ export async function deleteExistingMealPlan(mealPlanId, userId) {
     return { success: false, error: 'Failed to delete meal plan' };
   }
 }
-

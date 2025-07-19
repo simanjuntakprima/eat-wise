@@ -1,8 +1,8 @@
 import Link from 'next/link';
+
+import DashboardEmpty from '@/app/(app)/_components/emptyMealPlan';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { getMealPlanHistory } from './action';
-
 import {
   Pagination,
   PaginationContent,
@@ -11,7 +11,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import DashboardEmpty from '@/app/(app)/_components/emptyMealPlan';
+
+import { getMealPlanHistory } from './action';
 
 export default async function HistoryPage({ searchParams = {} }) {
   const page = Number(searchParams.page) || 1;

@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 // -> Impor komponen Dialog dari shadcn/ui
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function FoodModal({ foods }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,16 +15,6 @@ export default function FoodModal({ foods }) {
     setIsOpen(true);
   };
 
-  const closeModal = () => setIsOpen(false);
-
-  const goNext = () => {
-    if (activeIndex < foods.length - 1) setActiveIndex((i) => i + 1);
-  };
-
-  const goPrev = () => {
-    if (activeIndex > 0) setActiveIndex((i) => i - 1);
-  };
-
   if (!foods || foods.length === 0) {
     return <div>No food data available.</div>;
   }
@@ -32,7 +22,6 @@ export default function FoodModal({ foods }) {
   const currentFood = foods[activeIndex];
 
   return (
-
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <div className="grid grid-cols-5 gap-4">
         {foods.map((food, i) => (

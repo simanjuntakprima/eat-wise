@@ -1,15 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { redirect } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { createMealPlan, checkActiveMealPlan } from './action';
+
 import BudgetInput from './_components/budgetInput';
-import { redirect } from 'next/navigation';
+import { checkActiveMealPlan, createMealPlan } from './action';
 
 export default function CreateMeal() {
-  const [aiResult, setAiResult] = useState('');
   const [budget, setBudget] = useState(0);
   const [duration, setDuration] = useState('');
   const [meals, setMeals] = useState([]);
@@ -17,7 +18,7 @@ export default function CreateMeal() {
   const [load, setLoad] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [hasActivePlan, setHasActivePlan] = useState(null); // Initialize as null instead of false
-  const [showActivePlanPopup, setShowActivePlanPopup] = useState(false);
+  const [, setShowActivePlanPopup] = useState(false);
   const [isCheckingPlan, setIsCheckingPlan] = useState(true); // New loading state
 
   useEffect(() => {
@@ -25,7 +26,6 @@ export default function CreateMeal() {
     setIsFormValid(valid);
   }, [budget, duration, meals, type]);
 
-  // Check for active meal plan on component mount
   useEffect(() => {
     const verifyActivePlan = async () => {
       try {
@@ -45,14 +45,12 @@ export default function CreateMeal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoad(true);
-    setAiResult('');
     const formData = new FormData(event.target);
 
     try {
-      const res = await createMealPlan(formData);
+      await createMealPlan(formData);
     } catch (error) {
       console.error(error);
-      setAiResult('Error while sending to server');
     } finally {
       setLoad(false);
     }
@@ -65,7 +63,6 @@ export default function CreateMeal() {
   ];
 
   if (isCheckingPlan) {
-    // Show loading state while checking
     return (
       <div className="flex h-full items-center justify-center">
         <div className="flex items-end space-x-1">
